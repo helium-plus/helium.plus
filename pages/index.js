@@ -50,6 +50,16 @@ export default function Home() {
         body {
           background-color: #1e1e1e;
         }
+        ::-moz-selection {
+          /* Code for Firefox */
+          color: black;
+          background: #42de9f;
+        }
+
+        ::selection {
+          color: black;
+          background: #42de9f;
+        }
       `}</style>
     </div>
   );
