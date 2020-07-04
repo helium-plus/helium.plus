@@ -7,6 +7,7 @@ export default function Home() {
         <title>helium.plus</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
+        <meta property="og:image" content="https://helium.plus/og.png" />
       </Head>
 
       <main
