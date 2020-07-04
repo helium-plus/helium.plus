@@ -8,10 +8,30 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          paddingTop: "64px",
+        }}
+      >
         {/* <h1 className="title">helium.plus</h1> */}
-        <p className="description">Coming soon!</p>
+        <img src="/h+.png" style={{ height: "75px", width: "auto" }} />
+        <p
+          className="description"
+          style={{ color: "white", fontFamily: "Arial" }}
+        >
+          Coming soon!
+        </p>
       </main>
+
+      <style jsx global>{`
+        body {
+          background-color: #1e1e1e;
+        }
+      `}</style>
     </div>
   );
 }
