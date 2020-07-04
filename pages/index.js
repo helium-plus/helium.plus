@@ -6,6 +6,7 @@ export default function Home() {
       <Head>
         <title>helium.plus</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
       </Head>
 
       <main
@@ -18,10 +19,28 @@ export default function Home() {
         }}
       >
         {/* <h1 className="title">helium.plus</h1> */}
-        <img src="/h+.png" style={{ height: "75px", width: "auto" }} />
+        <img
+          src="/h+.png"
+          style={{ height: "150px", width: "auto", paddingBottom: "24px" }}
+        />
+        <h1
+          style={{
+            fontSize: "24px",
+            color: "white",
+            fontFamily: "Soleil",
+            margin: "0px",
+          }}
+        >
+          helium.plus
+        </h1>
         <p
           className="description"
-          style={{ color: "white", fontFamily: "Arial" }}
+          style={{
+            color: "#888",
+            fontSize: "18px",
+            fontFamily: "Soleil",
+            margin: "0px",
+          }}
         >
           Coming soon!
         </p>
