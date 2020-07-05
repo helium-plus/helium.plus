@@ -7,7 +7,7 @@ export default function Home() {
         <title>helium.plus</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
-        <meta property="og:image" content="https://helium.plus/og.png" />
+        <meta property="og:image" content="https://helium.plus/og2.png" />
       </Head>
 
       <main
@@ -21,7 +21,7 @@ export default function Home() {
       >
         {/* <h1 className="title">helium.plus</h1> */}
         <img
-          src="/h+.png"
+          src="/h+2.png"
           style={{ height: "150px", width: "auto", paddingBottom: "24px" }}
         />
         <h1
