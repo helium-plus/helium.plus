@@ -8,9 +8,13 @@ function EarningsCalculator({ data }) {
 
   const handleChange = (event) => {
     if (event.target.id === "earnings-per-day-input") {
-      setEarningsPerDay(event.target.value);
+      if (event.target.value !== undefined && event.target.value !== "")
+        setEarningsPerDay(+event.target.value);
+      else setEarningsPerDay(7);
     } else if (event.target.id === "number-of-hotspots-input") {
-      setNumberOfHotspots(event.target.value);
+      if (event.target.value !== undefined && event.target.value !== "")
+        setNumberOfHotspots(+event.target.value);
+      else setNumberOfHotspots(1);
     }
     return;
   };
@@ -47,14 +51,15 @@ function EarningsCalculator({ data }) {
         />
 
         <p>
-          With {numberOfHotspots} hotspot{numberOfHotspots === 1 ? "" : "s"},
-          each one earning roughly {earningsPerDay}
+          With {numberOfHotspots} hotspot{numberOfHotspots === 1 ? "" : "s"}
+          {numberOfHotspots === 1 ? "" : ", each one"} earning roughly{" "}
+          {earningsPerDay}
           {" HNT "}
-          per day, you'll make {totalEstimate} HNT per year.
+          per day, you'll make {totalEstimate} HNT per year.{" "}
         </p>
         <p>
-          That's {totalEstimateInUsd} USD at a rate of {hntUsdExchangeRate} USD
-          per HNT token per year.
+          That's {totalEstimateInUsd} USD per year at an exchange rate of{" "}
+          {hntUsdExchangeRate} USD per HNT token.
         </p>
       </main>
     </div>
