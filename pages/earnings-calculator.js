@@ -77,7 +77,8 @@ function EarningsCalculator({ priceData }) {
         <h1
           css={css`
             max-width: 400px;
-            font-family: Soleil;
+            font-family: Sora;
+            font-weight: 600 !important;
             color: ${hpWhite} !important;
           `}
           className="pt-20"
@@ -136,7 +137,8 @@ function EarningsCalculator({ priceData }) {
         <p
           css={css`
             max-width: 400px;
-            font-family: Soleil;
+            font-family: Sora;
+            font-weight: 400;
             color: ${hpLightGrey};
           `}
         >
@@ -155,6 +157,12 @@ function EarningsCalculator({ priceData }) {
               <span
                 css={css`
                   color: ${hpBlue};
+                  font-family: Sen;
+                  font-weight: 400;
+                  background-color: #000;
+                  margin: 2px;
+                  padding: 2px 5px;
+                  border-radius: 5px;
                 `}
               >
                 {value}
@@ -166,7 +174,8 @@ function EarningsCalculator({ priceData }) {
         <p
           css={css`
             max-width: 400px;
-            font-family: Soleil;
+            font-family: Sora;
+            font-weight: 400;
             color: ${hpLightGrey};
           `}
         >
@@ -182,6 +191,12 @@ function EarningsCalculator({ priceData }) {
               <span
                 css={css`
                   color: ${hpGreen};
+                  font-family: Sen;
+                  font-weight: 400;
+                  background-color: #000;
+                  margin: 2px;
+                  padding: 2px 5px;
+                  border-radius: 5px;
                 `}
               >
                 {value}

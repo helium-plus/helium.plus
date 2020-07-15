@@ -23,6 +23,13 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;800&display=swap"
+            rel="stylesheet"
+          />
+          <meta property="og:image" content="https://helium.plus/og2.png" />
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-73259800-4"

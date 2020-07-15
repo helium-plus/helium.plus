@@ -5,9 +5,6 @@ export default function Home() {
     <div className="">
       <Head>
         <title>helium.plus</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
-        <meta property="og:image" content="https://helium.plus/og2.png" />
       </Head>
 
       <main
@@ -28,7 +25,8 @@ export default function Home() {
           style={{
             fontSize: "24px",
             color: "white",
-            fontFamily: "Soleil",
+            fontFamily: "Sora",
+            fontWeight: "400",
             margin: "0px",
           }}
         >
@@ -39,7 +37,8 @@ export default function Home() {
           style={{
             color: "#888",
             fontSize: "18px",
-            fontFamily: "Soleil",
+            fontFamily: "Sora",
+            fontWeight: "200",
             margin: "0px",
           }}
         >
