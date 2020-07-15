@@ -5,27 +5,57 @@ import Head from "next/head";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
-function EarningsCalculator({ data }) {
-  const [earningsPerDay, setEarningsPerDay] = useState(7);
-  const [numberOfHotspots, setNumberOfHotspots] = useState(1);
+import CurrencyFormat from "react-currency-format";
 
-  const handleChange = (event) => {
-    if (event.target.id === "earnings-per-day-input") {
-      if (event.target.value !== undefined && event.target.value !== "")
-        setEarningsPerDay(+event.target.value);
-      else setEarningsPerDay(7);
-    } else if (event.target.id === "number-of-hotspots-input") {
-      if (event.target.value !== undefined && event.target.value !== "")
+function EarningsCalculator({ priceData }) {
+  const hpGreen = `#42DE9F`;
+  const hpBlue = `#42D1E4`;
+  const hpLightGrey = `#CCC`;
+  const hpWhite = `#FFF`;
+
+  const [earningsPerDay, setEarningsPerDay] = useState(5);
+  const [earningsPerDayInputIsEmpty, setEarningsPerDayInputIsEmpty] = useState(
+    true
+  );
+
+  const [numberOfHotspots, setNumberOfHotspots] = useState(1);
+  const [
+    numberOfHotspotsInputIsEmpty,
+    setNumberOfHotspotsInputIsEmpty,
+  ] = useState(true);
+
+  const handleNumberOfHotspotsChange = (event) => {
+    const prevNumberOfHotspots = numberOfHotspots;
+
+    if (event.target.value !== undefined && event.target.value !== "") {
+      if (event.target.value % 1 === 0) {
         setNumberOfHotspots(+event.target.value);
-      else setNumberOfHotspots(1);
+        setNumberOfHotspotsInputIsEmpty(false);
+      } else {
+        setNumberOfHotspots(+prevNumberOfHotspots);
+        setNumberOfHotspotsInputIsEmpty(false);
+      }
+    } else {
+      setNumberOfHotspots(1);
+      setNumberOfHotspotsInputIsEmpty(true);
     }
-    return;
+  };
+  const handleEarningsPerDayChange = (event) => {
+    const prevEarningsPerDay = earningsPerDay;
+
+    if (event.target.value !== undefined && event.target.value !== "") {
+      setEarningsPerDay(+event.target.value);
+      setEarningsPerDayInputIsEmpty(false);
+    } else {
+      setEarningsPerDay(5);
+      setEarningsPerDayInputIsEmpty(true);
+    }
   };
 
   let hntUsdExchangeRate = 0.4;
 
-  if (data.data[0].price !== undefined) {
-    hntUsdExchangeRate = data.data[0].price / 100000000;
+  if (priceData.data.price !== undefined) {
+    hntUsdExchangeRate = priceData.data.price / 100000000;
   }
 
   const totalEstimate = earningsPerDay * numberOfHotspots * 365;
@@ -48,6 +78,7 @@ function EarningsCalculator({ data }) {
           css={css`
             max-width: 400px;
             font-family: Soleil;
+            color: ${hpWhite} !important;
           `}
           className="pt-20"
         >
@@ -55,33 +86,50 @@ function EarningsCalculator({ data }) {
         </h1>
         <input
           type="number"
+          min="0"
+          pattern="[0-9]"
+          step="1"
           id="number-of-hotspots-input"
           placeholder={1}
-          onChange={handleChange}
-          className={``}
+          onChange={handleNumberOfHotspotsChange}
+          value={numberOfHotspotsInputIsEmpty ? "" : numberOfHotspots}
+          className={`mr-4`}
           css={css`
+            border-radius: 8px;
             max-width: 250px;
             width: auto;
-            border: 1px solid #ccc;
+            border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
-            /* margin: 1rem; */
             font-family: Sen;
+            outline: none;
+
+            &:focus {
+              border: 2px solid ${hpGreen};
+            }
           `}
         />
         <input
           type="number"
           id="earnings-per-day-input"
-          placeholder={7}
-          onChange={handleChange}
+          placeholder={5}
+          value={earningsPerDayInputIsEmpty ? "" : earningsPerDay}
+          onChange={handleEarningsPerDayChange}
+          autoFocus
+          step="1"
           css={css`
+            border-radius: 8px;
             max-width: 250px;
             width: auto;
-            border: 1px solid #ccc;
+            border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
             font-family: Sen;
-            /* margin: 1rem; */
+            outline: none;
+
+            &:focus {
+              border: 2px solid ${hpGreen};
+            }
           `}
         />
 
@@ -89,34 +137,86 @@ function EarningsCalculator({ data }) {
           css={css`
             max-width: 400px;
             font-family: Soleil;
+            color: ${hpLightGrey};
           `}
         >
-          With {numberOfHotspots} hotspot{numberOfHotspots === 1 ? "" : "s"}
+          With {numberOfHotspots} hotspot
+          {numberOfHotspots === 1 ? "" : "s"}
           {numberOfHotspots === 1 ? "" : ", each one"} earning roughly{" "}
           {earningsPerDay}
           {" HNT "}
-          per day, you'll make {totalEstimate} HNT per year.{" "}
+          per day, you'll make{" "}
+          <CurrencyFormat
+            value={totalEstimate}
+            displayType={"text"}
+            thousandSeparator={true}
+            decimalScale={0}
+            renderText={(value) => (
+              <span
+                css={css`
+                  color: ${hpBlue};
+                `}
+              >
+                {value}
+              </span>
+            )}
+          />{" "}
+          HNT per year.{" "}
         </p>
         <p
           css={css`
             max-width: 400px;
             font-family: Soleil;
+            color: ${hpLightGrey};
           `}
         >
-          That's {totalEstimateInUsd} USD per year at an exchange rate of{" "}
-          {hntUsdExchangeRate} USD per HNT token.
+          That's{" "}
+          <CurrencyFormat
+            value={totalEstimateInUsd}
+            displayType={"text"}
+            thousandSeparator={true}
+            decimalScale={2}
+            fixedDecimalScale={true}
+            prefix={"$"}
+            renderText={(value) => (
+              <span
+                css={css`
+                  color: ${hpGreen};
+                `}
+              >
+                {value}
+              </span>
+            )}
+          />{" "}
+          USD per year at an exchange rate of {hntUsdExchangeRate} USD per HNT
+          token.
         </p>
       </main>
+      <style jsx global>{`
+        body {
+          background-color: #1e1e1e;
+        }
+        ::-moz-selection {
+          /* Code for Firefox */
+          color: black;
+          background: #42de9f;
+        }
+
+        ::selection {
+          color: black;
+          background: #42de9f;
+        }
+      `}</style>
     </div>
   );
 }
 
 export async function getServerSideProps() {
-  const res = await fetch(`https://api.helium.io/v1/oracle/prices`);
-  const data = await res.json();
+  const res = await fetch(`https://api.helium.io/v1/oracle/prices/current`);
+  const priceData = await res.json();
 
   return {
-    props: { data },
+    props: { priceData },
   };
 }
 
