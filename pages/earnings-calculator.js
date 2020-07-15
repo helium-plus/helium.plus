@@ -91,6 +91,7 @@ function EarningsCalculator({ priceData }) {
           step="1"
           id="number-of-hotspots-input"
           placeholder={1}
+          autoFocus
           onChange={handleNumberOfHotspotsChange}
           value={numberOfHotspotsInputIsEmpty ? "" : numberOfHotspots}
           className={`mr-4`}
@@ -115,7 +116,6 @@ function EarningsCalculator({ priceData }) {
           placeholder={5}
           value={earningsPerDayInputIsEmpty ? "" : earningsPerDay}
           onChange={handleEarningsPerDayChange}
-          autoFocus
           step="1"
           css={css`
             border-radius: 8px;
