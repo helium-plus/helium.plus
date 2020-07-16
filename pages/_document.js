@@ -24,15 +24,11 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <link rel="icon" href="/favicon.ico" />
-          <link rel="stylesheet" href="https://use.typekit.net/wet2ruk.css" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Sora:wght@200;400;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;400;600;800&family=Sora:wght@200;400;600;800&display=swap"
             rel="stylesheet"
           />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap"
-            rel="stylesheet"
-          />
+
           <meta property="og:image" content="https://helium.plus/og2.png" />
           <script
             async

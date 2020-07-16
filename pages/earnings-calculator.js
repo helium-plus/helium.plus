@@ -103,7 +103,7 @@ function EarningsCalculator({ priceData }) {
             border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
-            font-family: Sen;
+            font-family: Sora;
             outline: none;
 
             &:focus {
@@ -125,7 +125,7 @@ function EarningsCalculator({ priceData }) {
             border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
-            font-family: Sen;
+            font-family: Sora;
             outline: none;
 
             &:focus {
@@ -137,7 +137,7 @@ function EarningsCalculator({ priceData }) {
         <p
           css={css`
             max-width: 400px;
-            font-family: Sora;
+            font-family: Open Sans;
             font-weight: 400;
             color: ${hpLightGrey};
           `}
@@ -157,7 +157,7 @@ function EarningsCalculator({ priceData }) {
               <span
                 css={css`
                   color: ${hpBlue};
-                  font-family: Sen;
+                  font-family: Sora;
                   font-weight: 400;
                   background-color: #000;
                   margin: 2px;
@@ -174,7 +174,7 @@ function EarningsCalculator({ priceData }) {
         <p
           css={css`
             max-width: 400px;
-            font-family: Sora;
+            font-family: Open Sans;
             font-weight: 400;
             color: ${hpLightGrey};
           `}
@@ -191,7 +191,7 @@ function EarningsCalculator({ priceData }) {
               <span
                 css={css`
                   color: ${hpGreen};
-                  font-family: Sen;
+                  font-family: Sora;
                   font-weight: 400;
                   background-color: #000;
                   margin: 2px;
