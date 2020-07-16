@@ -63,9 +63,14 @@ function EarningsCalculator({ priceData }) {
 
   return (
     <div
-      className="m-4 flex align-center justify-center"
+      className="flex align-center justify-center"
       css={css`
         width: auto;
+        margin: 2rem;
+
+        @media screen and (max-width: 500px) {
+          margin: 1rem;
+        }
       `}
     >
       <Head>
@@ -80,8 +85,14 @@ function EarningsCalculator({ priceData }) {
             font-family: Sora;
             font-weight: 600 !important;
             color: ${hpWhite} !important;
+
+            padding-top: 8rem;
+
+            @media screen and (max-width: 500px) {
+              padding-top: 2rem;
+            }
           `}
-          className="pt-20"
+          className=""
         >
           Helium Hotspot Earnings Calculator
         </h1>
@@ -99,7 +110,7 @@ function EarningsCalculator({ priceData }) {
           css={css`
             border-radius: 8px;
             max-width: 250px;
-            width: auto;
+            width: calc(50% - 2rem);
             border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
@@ -122,6 +133,7 @@ function EarningsCalculator({ priceData }) {
             border-radius: 8px;
             max-width: 250px;
             width: auto;
+            width: calc(50% - 2rem);
             border: 2px solid transparent;
             height: 45px;
             padding: 1rem;
