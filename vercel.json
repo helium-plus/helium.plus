@@ -6,6 +6,20 @@
       "headers": {
         "Location": "/earnings-calculator"
       }
+    },
+    {
+      "src": "/t",
+      "status": 301,
+      "headers": {
+        "Location": "/hnt-current-price"
+      }
+    },
+    {
+      "src": "/hnt",
+      "status": 301,
+      "headers": {
+        "Location": "/hnt-current-price"
+      }
     }
   ]
 }
