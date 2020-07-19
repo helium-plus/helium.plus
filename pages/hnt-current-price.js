@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import Head from "next/head";
+import Link from "next/link";
 
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
@@ -40,13 +41,27 @@ function HNTCurrentPrice({ priceData }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="prose">
+      <main
+        className="prose"
+        css={css`
+          max-width: 25vw;
+          width: 100%;
+
+          @media screen and (max-width: 1280px) {
+            max-width: 50vw;
+          }
+          @media screen and (max-width: 800px) {
+            max-width: 75vw;
+          }
+        `}
+      >
         <h1
           css={css`
             max-width: 400px;
             font-family: Sora;
             font-weight: 600 !important;
             color: ${hpWhite} !important;
+            font-stretch: 50% !important;
 
             padding-top: 8rem;
 
@@ -80,13 +95,33 @@ function HNTCurrentPrice({ priceData }) {
                     max-width: 100%;
                     color: ${hpGreen};
                     font-family: Sora;
-                    font-size: 8rem;
-                    line-height: 10rem;
+                    font-size: 7vw;
+                    /* line-height: 10rem; */
+                    line-height: 9vw;
                     font-weight: 400;
                     background-color: #000;
                     margin: 2px;
                     padding: 8px 15px;
                     border-radius: 10px;
+
+                    /* @media screen and (max-width: 700px) {
+                      font-size: 12vw;
+                      line-height: 14vw;
+                    }
+                    @media screen and (max-width: 500px) {
+                      font-size: 25vw;
+                      /* line-height: 10rem; */
+                    /* line-height: 30vw;
+                    } */
+
+                    @media screen and (max-width: 1280px) {
+                      font-size: 12vw;
+                      line-height: 14vw;
+                    }
+                    @media screen and (max-width: 800px) {
+                      font-size: 25vw;
+                      line-height: 30vw;
+                    }
                   `}
                 >
                   {value}
@@ -103,7 +138,22 @@ function HNTCurrentPrice({ priceData }) {
             `}
           >
             The above number is the most recent exchange rate of USD per HNT, as
-            reported by the Helium price oracle.
+            reported by{" "}
+            <a
+              href="https://developer.helium.com/blockchain/hnt-price-oracles"
+              target="_blank"
+              css={css`
+                color: #00bba0 !important;
+                text-decoration: none !important;
+
+                &:hover {
+                  text-decoration: underline !important;
+                }
+              `}
+            >
+              HNT Price Oracles
+            </a>
+            .
           </p>
         </div>
         <p>Below are the previous prices:</p>
