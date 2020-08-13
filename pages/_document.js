@@ -1,4 +1,5 @@
 import Document, { Head, Main, NextScript } from "next/document";
+import NavBar from "../components/NavBar";
 import { extractCritical } from "emotion-server";
 
 export default class MyDocument extends Document {
@@ -22,6 +23,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <html>
+        <NavBar />
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link
