@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -44,6 +45,50 @@ export default function Home() {
         >
           Coming soon!
         </p>
+
+        <p
+          className="description"
+          style={{
+            color: "#888",
+            fontSize: "18px",
+            fontFamily: "Sora",
+            fontWeight: "200",
+            margin: "60px 0 0 0",
+            maxWidth: "400px",
+            // padding: "10px",
+          }}
+        >
+          But in the meantime, check out:
+        </p>
+
+        <Link href="/earnings-calculator">
+          <a
+            className="link"
+            style={{
+              color: "#eee",
+              fontSize: "18px",
+              fontFamily: "Sora",
+              fontWeight: "200",
+              margin: "10px 0 0 0",
+            }}
+          >
+            HNT Earnings Calculator
+          </a>
+        </Link>
+        <Link href="/hnt-current-price">
+          <a
+            className="link"
+            style={{
+              color: "#eee",
+              fontSize: "18px",
+              fontFamily: "Sora",
+              fontWeight: "200",
+              margin: "10px 0 0 0",
+            }}
+          >
+            HNT Current Price
+          </a>
+        </Link>
       </main>
 
       <style jsx global>{`
