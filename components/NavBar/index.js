@@ -9,37 +9,43 @@ import Link from "next/link";
 import { css, jsx } from "@emotion/core";
 
 import CurrencyFormat from "react-currency-format";
+const hpGreen = `#42DE9F`;
+const hpBlue = `#42D1E4`;
+const hpLightGrey = `#CCC`;
+const hpWhite = `#FFF`;
 
-const NavBarWrapperDiv = styled.div`
+const NavBarLink = styled.a`
+  font-size: 12px;
+  font-weight: ${(props) => (props.cta ? "bold" : "normal")};
+  background-color: ${(props) => (props.cta ? hpGreen : "transparent")};
+  color: ${(props) => (props.cta ? "black" : "white")};
+  padding: 10px 16px;
+  height: 40px;
+  border-radius: 10px;
+  margin-right: ${(props) => (!props.cta ? "40px" : "0")};
+`;
+
+const NavBarWrapperDiv = styled.nav`
   display: flex;
   height: 60px;
   width: 100%;
-  background-color: #111;
+
+  margin-top: -2rem;
+
+  position: fixed;
+  background: rgba(26, 26, 26, 0.75);
+
+  backdrop-filter: saturate(380%) blur(20px);
 `;
 
-const NavBar = ({ priceData }) => {
-  const hpGreen = `#42DE9F`;
-  const hpBlue = `#42D1E4`;
-  const hpLightGrey = `#CCC`;
-  const hpWhite = `#FFF`;
-
-  // let hntUsdExchangeRate = 0.4;
-  // let currentHntPrice = 0.4;
-
-  // if (priceData.data[0].price !== undefined) {
-  //   hntUsdExchangeRate = priceData.data[0].price / 100000000;
-  // }
-
-  // const totalEstimate = earningsPerDay * numberOfHotspots * 365;
-  // const totalEstimateInUsd = totalEstimate * hntUsdExchangeRate;
-
+const NavBar = () => {
   return (
     <NavBarWrapperDiv>
       <div className="flex flex-row items-between justify-start w-full	">
         <div
           className="flex"
           css={css`
-            max-width: 1200px;
+            max-width: 836px;
             width: 100%;
             margin-left: auto;
             margin-right: auto;
@@ -49,17 +55,39 @@ const NavBar = ({ priceData }) => {
             <title>Helium Hotspot Earnings Calculator</title>
             <link rel="icon" href="/favicon.ico" />
           </Head>
-          <div className="flex content-between items-center justify-start">
-            <img
-              src="/h+2.png"
-              className="flex"
-              style={{ height: "32px", width: "auto", paddingBottom: "0" }}
-            />
-            <p>Helium Plus</p>
+          <div className="flex items-center justify-between w-full">
+            <Link href="/">
+              <a className="">
+                <img
+                  src="/h+wordmark.png"
+                  className="flex"
+                  style={{
+                    height: "32px",
+                    width: "auto",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                  }}
+                />
+              </a>
+            </Link>
+
+            <div>
+              <Link href="/earnings-calculator">
+                <NavBarLink href="earnings-calculator">Calculator</NavBarLink>
+              </Link>
+              <Link href="/about">
+                <NavBarLink href="about">About</NavBarLink>
+              </Link>
+
+              <NavBarLink
+                cta
+                target="_blank"
+                href="http://fbuy.me/v/danielcolinjames"
+              >
+                Buy Hotspot
+              </NavBarLink>
+            </div>
           </div>
-          <Link href="/about">
-            <a>About</a>
-          </Link>
           <style jsx global>{`
             body {
               background-color: #1e1e1e;

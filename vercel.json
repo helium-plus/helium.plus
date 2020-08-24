@@ -8,6 +8,12 @@
       }
     },
     {
+      "src": "/sec",
+      "headers": {
+        "Location": "/simple-earnings-calculator"
+      }
+    },
+    {
       "src": "/t",
       "status": 301,
       "headers": {

@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.link:hover {
+  /* &:hover { */
+  /* outline: 1px solid #42de9f; */
+  /* color: #42de9f; */
+  color: #bbb !important;
+  /* } */
+}
+
+.link:focus {
+  /* background-color: #; */
+  outline: 1px solid #42de9f;
+  color: white;
+}

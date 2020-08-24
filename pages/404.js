@@ -70,6 +70,24 @@ export default function NotFoundPage() {
               </Link>
             </li>
             <li>
+              <Link href="/simple-earnings-calculator">
+                <a
+                  css={css`
+                    color: white !important;
+                    font-family: "Sora";
+
+                    &:hover {
+                      text-decoration: none !important;
+                      cursor: pointer;
+                      color: #42de9f !important;
+                    }
+                  `}
+                >
+                  Simple earnings calculator
+                </a>
+              </Link>
+            </li>
+            <li>
               <Link href="/hnt-current-price">
                 <a
                   css={css`
@@ -92,7 +110,11 @@ export default function NotFoundPage() {
       </main>
       <style jsx global>{`
         body {
-          background-color: #1e1e1e;
+          background-image: linear-gradient(#070e15, #1e2b37);
+          height: 100%;
+          margin: 0;
+          background-repeat: no-repeat;
+          background-attachment: fixed;
         }
         ::-moz-selection {
           /* Code for Firefox */

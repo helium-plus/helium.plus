@@ -1,10 +1,19 @@
 import Head from "next/head";
+import Link from "next/link";
 import NavBar from "../components/NavBar";
+
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 
 export default function Home() {
   return (
     <>
-      <div className="">
+      <NavBar />
+      <div
+        css={css`
+          margin: 2rem auto;
+        `}
+      >
         <Head>
           <title>helium.plus</title>
         </Head>
@@ -21,7 +30,7 @@ export default function Home() {
           {/* <h1 className="title">helium.plus</h1> */}
           <img
             src="/h+2.png"
-            style={{ height: "150px", width: "auto", paddingBottom: "24px" }}
+            style={{ height: "250px", width: "auto", paddingBottom: "24px" }}
           />
           <h1
             style={{
@@ -46,11 +55,73 @@ export default function Home() {
           >
             Coming soon!
           </p>
+
+          <p
+            className="description"
+            style={{
+              color: "#888",
+              fontSize: "18px",
+              fontFamily: "Sora",
+              fontWeight: "200",
+              margin: "60px 0 0 0",
+              maxWidth: "400px",
+              // padding: "10px",
+            }}
+          >
+            But in the meantime, check out:
+          </p>
+
+          <Link href="/earnings-calculator">
+            <a
+              className="link"
+              style={{
+                color: "#eee",
+                fontSize: "18px",
+                fontFamily: "Sora",
+                fontWeight: "200",
+                margin: "10px 0 0 0",
+              }}
+            >
+              Hotspot Earnings Calculator
+            </a>
+          </Link>
+          <Link href="/simple-earnings-calculator">
+            <a
+              className="link"
+              style={{
+                color: "#eee",
+                fontSize: "18px",
+                fontFamily: "Sora",
+                fontWeight: "200",
+                margin: "10px 0 0 0",
+              }}
+            >
+              Simple Earnings Calculator
+            </a>
+          </Link>
+          <Link href="/hnt-current-price">
+            <a
+              className="link"
+              style={{
+                color: "#eee",
+                fontSize: "18px",
+                fontFamily: "Sora",
+                fontWeight: "200",
+                margin: "10px 0 0 0",
+              }}
+            >
+              HNT Current Price
+            </a>
+          </Link>
         </main>
 
         <style jsx global>{`
           body {
-            background-color: #1e1e1e;
+            background-image: linear-gradient(#070e15, #1e2b37);
+            height: 100%;
+            margin: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
           }
           ::-moz-selection {
             /* Code for Firefox */
