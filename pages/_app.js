@@ -230,7 +230,7 @@ function DownloadBanner() {
                 setNoThankYou(true);
               }}
             >
-              Not now
+              No thanks
             </DownloadBraveNoThanksText>
           </DownloadBraveBannerButtonContainer>
         </DownloadBraveBannerContentContainer>
