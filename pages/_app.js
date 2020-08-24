@@ -193,7 +193,7 @@ function checkIsBrave() {
 }
 
 function DownloadBanner() {
-  let isBrave = false;
+  let isBrave = true;
 
   try {
     isBrave = checkIsBrave();
