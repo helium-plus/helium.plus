@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import NavBar from "../components/NavBar";
 import Head from "next/head";
@@ -107,7 +107,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     setHotspots(hotspotsArray);
   };
 
-  console.log(hotspots);
+  // console.log(hotspots);
 
   const removeRow = (number) => {
     let hotspotsArray = [...hotspots];
@@ -174,6 +174,12 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     color: #969696;
   `;
 
+  const ShowMathButton = styled.button`
+    color: #ccc;
+    background-color: #1a2733;
+    border-radius: 3px;
+  `;
+
   const monthlyRewards = chainVars.data.monthly_reward;
   const dcPercent = chainVars.data.dc_percent;
   const witnessPercent = chainVars.data.poc_witnesses_percent;
@@ -184,8 +190,74 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const monthlyRewardsInRealNumbers = monthlyRewards / 100000000;
 
   const numberOfActiveHotspots = stats.data.counts.hotspots;
+  console.log(stats.data.counts);
+  // const dcTransferredLastMonth = stats.data.counts.hotspots;
 
   let totalEarnings = 0;
+
+  const [rewardsShowingState, setRewardsShowingState] = useState({
+    challenger: {
+      totalAvailable: false,
+      likelyPerEpoch: false,
+    },
+    challengee: {
+      totalAvailable: false,
+      likelyPerEpoch: false,
+    },
+    witness: {
+      totalAvailable: false,
+      likelyPerEpoch: false,
+    },
+    consensus: {
+      totalAvailable: false,
+      likelyPerEpoch: false,
+    },
+    data: {
+      totalAvailable: false,
+      likelyPerEpoch: false,
+    },
+  });
+
+  const updateRewardsMathShowingState = (input) => {
+    let tempStateObject = rewardsShowingState;
+
+    console.log(!tempStateObject.challenger.totalAvailable);
+
+    switch (input) {
+      case "challenger-1":
+        tempStateObject.challenger.totalAvailable = true;
+        break;
+      case "challenger-2":
+        tempStateObject.challenger.likelyPerEpoch = true;
+        break;
+      case "challengee-1":
+        tempStateObject.challengee.likelyPerEpoch = true;
+        break;
+      case "challenger-2":
+        tempStateObject.challengee.likelyPerEpoch = true;
+        break;
+      case "witness-1":
+        tempStateObject.witness.likelyPerEpoch = true;
+        break;
+      case "witness-2":
+        tempStateObject.witness.likelyPerEpoch = true;
+        break;
+      case "consensus-1":
+        tempStateObject.consensus.likelyPerEpoch = true;
+        break;
+      case "consensus-2":
+        tempStateObject.consensus.likelyPerEpoch = true;
+        break;
+      case "data-1":
+        tempStateObject.data.likelyPerEpoch = true;
+        break;
+      case "data-2":
+        tempStateObject.data.likelyPerEpoch = true;
+        break;
+    }
+    setRewardsShowingState(tempStateObject);
+  };
+  useEffect(() => {}, [rewardsShowingState]);
 
   return (
     <>
@@ -319,6 +391,12 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                 state of the Helium network and the current HNT reward
                 distrubtion.
               </Prose>
+              <Prose>
+                A much simpler version of this tool can be found{" "}
+                <Link href="/simple-earnings-calculator">
+                  <a href="/simple-earnings-calculator">here.</a>
+                </Link>
+              </Prose>
             </div>
             <div
               css={css`
@@ -363,6 +441,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
                   if (loneWolfness > 2) {
                     hotspotEarnings += consensusRewards;
+                    hotspotEarnings += dataRewards;
                   }
                 }
 
@@ -406,6 +485,16 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                 {monthlyRewardsInRealNumbers *
                                   challengerPercent}
                               </p>
+                              <ShowMathButton
+                                onClick={() =>
+                                  updateRewardsMathShowingState("challenger-1")
+                                }
+                              >
+                                Show math
+                              </ShowMathButton>
+                              {console.log(rewardsShowingState)}
+                              {rewardsShowingState.challenger
+                                .totalAvailable && <p>Math: blah blah blah</p>}
                             </td>
                             <td className="p-5">
                               Likely earnings per month:
@@ -650,7 +739,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                   </>
                 );
               })}
-              {/* {console.log(chainVars)} */}
               <div
                 css={css`
                   background-color: #334a60;
@@ -705,30 +793,11 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
           </main>
         </div>
       )}
-      <style jsx global>{`
-        body {
-          background-image: linear-gradient(#070e15, #1e2b37);
-          height: 100%;
-          margin: 0;
-          background-repeat: no-repeat;
-          background-attachment: fixed;
-        }
-        ::-moz-selection {
-          /* Code for Firefox */
-          color: black;
-          background: #42de9f;
-        }
-
-        ::selection {
-          color: black;
-          background: #42de9f;
-        }
-      `}</style>
     </>
   );
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const chainVarsRes = await fetch(`https://api.helium.io/v1/vars`);
   const chainVars = await chainVarsRes.json();
 

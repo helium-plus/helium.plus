@@ -26,7 +26,7 @@ export default class MyDocument extends Document {
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;400;600;800&family=Sora:wght@200;400;600;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Oxygen:wght@200;400;600;800&family=Sora:wght@200;400;600;800&display=swap"
             rel="stylesheet"
           />
 
@@ -47,7 +47,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body>
+        <body className="mt-12">
           <Main />
           <NextScript />
         </body>

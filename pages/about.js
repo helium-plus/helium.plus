@@ -64,26 +64,6 @@ export default function About() {
             Follow helium+ on Twitter!
           </a>
         </main>
-
-        <style jsx global>{`
-          body {
-            background-image: linear-gradient(#070e15, #1e2b37);
-            height: 100%;
-            margin: 0;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-          }
-          ::-moz-selection {
-            /* Code for Firefox */
-            color: black;
-            background: #42de9f;
-          }
-
-          ::selection {
-            color: black;
-            background: #42de9f;
-          }
-        `}</style>
       </div>
     </>
   );

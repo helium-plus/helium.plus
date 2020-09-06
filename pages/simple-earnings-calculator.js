@@ -224,31 +224,12 @@ const EarningsCalculator = ({ priceData }) => {
             token.
           </Prose>
         </main>
-        <style jsx global>{`
-          body {
-            background-image: linear-gradient(#070e15, #1e2b37);
-            height: 100%;
-            margin: 0;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-          }
-          ::-moz-selection {
-            /* Code for Firefox */
-            color: black;
-            background: #42de9f;
-          }
-
-          ::selection {
-            color: black;
-            background: #42de9f;
-          }
-        `}</style>
       </div>
     </>
   );
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await fetch(`https://api.helium.io/v1/oracle/prices/current`);
   const priceData = await res.json();
 
