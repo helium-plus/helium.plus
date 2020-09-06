@@ -28,6 +28,7 @@ const NavBarLink = styled.a`
 
 const NavBarWrapperDiv = styled.nav`
   background: rgba(26, 26, 26, 0.75);
+  z-index: 10;
   backdrop-filter: saturate(380%) blur(20px);
 `;
 

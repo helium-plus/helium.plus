@@ -154,19 +154,26 @@ const HotspotCalculatorRow = (props) => {
         `}
       />
       {props.lastRow && (
-        <div className="flex flex-row px-8 py-5 bg-hpblue-1000 rounded-b-xl">
-          <CalculateButton
-            className="font-display text-black px-4 py-1 mr-4"
-            onClick={props.calculateFunction}
-          >
-            Calculate
-          </CalculateButton>
-          <AddRowButton
-            className="font-display text-black px-4 py-1"
-            onClick={props.addRowHandler}
-          >
-            Add hotspot +
-          </AddRowButton>
+        <div className="px-8 py-5 bg-hpblue-1000 rounded-b-xl">
+          {props.warningMessage && (
+            <p className="text-hpgreen-100 font-body font-bold pb-4">
+              {props.warningMessage}
+            </p>
+          )}
+          <div className="flex flex-row">
+            <CalculateButton
+              className="font-display text-black px-4 py-1 mr-4"
+              onClick={props.calculateFunction}
+            >
+              Calculate
+            </CalculateButton>
+            <AddRowButton
+              className="font-display text-black px-4 py-1"
+              onClick={props.addRowHandler}
+            >
+              Add hotspot +
+            </AddRowButton>
+          </div>
         </div>
       )}
     </Container>
