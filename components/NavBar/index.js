@@ -9,6 +9,7 @@ import Link from "next/link";
 import { css, jsx } from "@emotion/core";
 
 import CurrencyFormat from "react-currency-format";
+
 const hpGreen = `#42DE9F`;
 const hpBlue = `#42D1E4`;
 const hpLightGrey = `#CCC`;
@@ -26,48 +27,19 @@ const NavBarLink = styled.a`
 `;
 
 const NavBarWrapperDiv = styled.nav`
-  display: flex;
-  height: 60px;
-  width: 100%;
-
-  margin-top: -2rem;
-
-  position: fixed;
   background: rgba(26, 26, 26, 0.75);
-
   backdrop-filter: saturate(380%) blur(20px);
 `;
 
 const NavBar = () => {
   return (
-    <NavBarWrapperDiv>
+    <NavBarWrapperDiv className="-mt-12 flex h-12 w-full fixed">
       <div className="flex flex-row items-between justify-start w-full	">
-        <div
-          className="flex"
-          css={css`
-            max-width: 836px;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-          `}
-        >
-          <Head>
-            <title>Helium Hotspot Earnings Calculator</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+        <div className="flex mx-auto w-full max-w-xl lg:max-w-4xl p-4 ">
           <div className="flex items-center justify-between w-full">
             <Link href="/">
               <a className="">
-                <img
-                  src="/h+wordmark.png"
-                  className="flex"
-                  style={{
-                    height: "32px",
-                    width: "auto",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                />
+                <img src="/lockup.png" className="flex w-auto h-6" />
               </a>
             </Link>
 
@@ -79,43 +51,19 @@ const NavBar = () => {
                 <NavBarLink href="about">About</NavBarLink>
               </Link>
 
-              <NavBarLink
+              {/* <NavBarLink
                 cta
                 target="_blank"
                 href="http://fbuy.me/v/danielcolinjames"
               >
                 Buy Hotspot
-              </NavBarLink>
+              </NavBarLink> */}
             </div>
           </div>
-          <style jsx global>{`
-            body {
-              background-color: #1e1e1e;
-            }
-            ::-moz-selection {
-              /* Code for Firefox */
-              color: black;
-              background: #42de9f;
-            }
-
-            ::selection {
-              color: black;
-              background: #42de9f;
-            }
-          `}</style>
         </div>
       </div>
     </NavBarWrapperDiv>
   );
 };
-
-// export async function getServerSideProps() {
-//   const res = await fetch(`https://api.helium.io/v1/oracle/prices`);
-//   const priceData = await res.json();
-
-//   return {
-//     props: { priceData },
-//   };
-// }
 
 export default NavBar;

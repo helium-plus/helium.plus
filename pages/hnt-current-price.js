@@ -141,8 +141,8 @@ function HNTCurrentPrice({ priceData }) {
                 color: ${hpLightGrey};
               `}
             >
-              The above number is the most recent exchange rate of USD per HNT,
-              as reported by{" "}
+              The above number is the most recent USD/HNT exchange rate, as
+              reported by{" "}
               <a
                 href="https://developer.helium.com/blockchain/hnt-price-oracles"
                 target="_blank"
@@ -178,31 +178,12 @@ function HNTCurrentPrice({ priceData }) {
             })}
           </ul>
         </main>
-        <style jsx global>{`
-          body {
-            background-image: linear-gradient(#070e15, #1e2b37);
-            height: 100%;
-            margin: 0;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-          }
-          ::-moz-selection {
-            /* Code for Firefox */
-            color: black;
-            background: #42de9f;
-          }
-
-          ::selection {
-            color: black;
-            background: #42de9f;
-          }
-        `}</style>
       </div>
     </>
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await fetch(`https://api.helium.io/v1/oracle/prices`);
   const priceData = await res.json();
 
