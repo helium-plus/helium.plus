@@ -76,6 +76,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const totalEstimateInUsd = totalEstimate * hntUsdExchangeRate;
 
   const [numberOfHotspotRows, setNumberOfHotspotRows] = useState(1);
+  const [warningMessage, setWarningMessage] = useState("");
 
   const [hotspots, setHotspots] = useState([
     {
@@ -139,7 +140,20 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const [editingValues, setEditingValues] = useState(true);
 
   const flipBetweenEditingAndCalculating = () => {
-    setEditingValues(!editingValues);
+    let noDensitySelected = false;
+
+    hotspots.map((hotspot, index) => {
+      if (hotspot.hotspotDensitySelection === 0) noDensitySelected = true;
+    });
+
+    if (!noDensitySelected) {
+      setEditingValues(!editingValues);
+      setWarningMessage("");
+    } else {
+      setWarningMessage(
+        "Please make sure you've answered every question for each hotspot."
+      );
+    }
   };
 
   const EditButton = styled.button`
@@ -304,6 +318,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                       density3Handler={() => setDensity(3, hotspot.number)}
                       selectedDensity={hotspot.hotspotDensitySelection}
                       calculateFunction={flipBetweenEditingAndCalculating}
+                      warningMessage={warningMessage}
                     />
                   );
                 })}
