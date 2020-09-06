@@ -33,7 +33,7 @@ const NavBarWrapperDiv = styled.nav`
 
 const NavBar = () => {
   return (
-    <NavBarWrapperDiv className="-mt-12 asdf flex h-12 w-full fixed">
+    <NavBarWrapperDiv className="-mt-12 flex h-12 w-full fixed">
       <div className="flex flex-row items-between justify-start w-full	">
         <div className="flex mx-auto w-full max-w-xl lg:max-w-4xl p-4 ">
           <div className="flex items-center justify-between w-full">

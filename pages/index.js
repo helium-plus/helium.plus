@@ -19,14 +19,13 @@ export default function Home() {
         <title>Helium+</title>
       </Head>
 
-      <main className="flex items-center justify-center flex-col pt-16">
-        <section className="p-4 flex items-center lg:items-start justify-end flex-col lg:flex-row lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-20">
-          <img
-            className="h-auto lg:pb-6 pl-12 lg:pt-12 w-2/3 lg:w-1/2"
-            src="/hotspot.png"
-          />
+      <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
+        <section className="p-4 flex items-start lg:items-start justify-end flex-col lg:flex-row lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">
+          <div className="h-auto lg:pb-6 w-1/3 lg:w-1/2 lg:pt-12">
+            <img className="w-full" src="/hotspot.png" />
+          </div>
           <div className="max-w-xl w-full lg:max-w-none flex items-start justify-start flex-col">
-            <h1 className="text-5xl max-w-md lg:max-w-none text-white font-display lg:pt-12 leading-tight lg:text-6xl text-left font-bold pr-2">
+            <h1 className="text-5xl max-w-md lg:max-w-none text-white font-display pt-6 lg:pt-12 leading-tight lg:text-6xl text-left font-bold pr-2">
               A Helium toolkit for power users
             </h1>
             <p className="max-w-md text-lg font-body pt-4 text-gray-500 text-left">
@@ -36,7 +35,7 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className="bg-white w-full flex items-center lg:items-start justify-end flex-col pb-64">
+        <section className="bg-gray-300 w-full flex items-center lg:items-start justify-end flex-col pb-64">
           <div className="max-w-xl w-full lg:max-w-4xl mx-auto p-4">
             <h2 className="font-display text-black text-3xl font-bold pt-6">
               Tools

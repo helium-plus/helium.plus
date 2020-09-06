@@ -2,22 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* a {
-  color: #42de9f;
-} */
-
-/* a:focus {
-  outline: 1px solid #42de9f;
-  color: white;
-} */
-
-/* .link:hover {
-  /* &:hover { */
-/* outline: 1px solid #42de9f; */
-/* color: #42de9f; */
-/* color: #bbb !important; */
-/* } */
-/* } */
+a:focus {
+  box-shadow: 0 0 0 3px rgba(66, 225, 183, 0.31);
+  outline: none;
+  border: none;
+}
+button:focus {
+  box-shadow: 0 0 0 3px rgba(66, 225, 183, 0.31);
+  outline: none;
+  border: none;
+}
 
 .link:focus {
   /* background-color: #; */
@@ -26,13 +20,9 @@
 }
 
 body {
-  /* background-image: linear-gradient(#070e15, #1e2b37); */
-  /* background-color: #0a0a0a; */
   background-color: #0c151d;
   height: 100%;
   margin: 0;
-  /* background-repeat: no-repeat; */
-  /* background-attachment: fixed; */
 }
 ::-moz-selection {
   /* Code for Firefox */
@@ -43,8 +33,4 @@ body {
 ::selection {
   color: black;
   background: #42de9f;
-}
-
-button {
-  font-family: Oxygen;
 }

@@ -262,537 +262,447 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   return (
     <>
       <NavBar />
-      {editingValues ? (
-        <div
-          className="flex align-center justify-center"
-          css={css`
-            width: auto;
-            margin: 2rem auto;
-            padding: 2rem;
-            max-width: 900px;
+      <Head>
+        <title>Helium Hotspot Earnings Calculator</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-            @media screen and (max-width: 500px) {
-              margin: 1rem auto;
-              max-width: 400px;
-            }
-          `}
-        >
-          <Head>
-            <title>Helium Hotspot Earnings Calculator</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+      <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
+        <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-row w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-40">
+          <div className="max-w-2xl w-full flex items-start justify-start flex-col">
+            <h1 className="text-5xl max-w-2xl text-white font-display pt-6 lg:pt-12 leading-tight lg:text-6xl text-left font-bold pr-2">
+              Helium Hotspot Earnings Calculator
+            </h1>
+            <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
+              This tool can be used to give a rough estimate of how much HNT
+              your hotspot might earn, based on its situation and the current
+              state of the Helium network and the current HNT reward
+              distrubtion.
+            </p>
+            <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
+              A much simpler version of this tool can be found{" "}
+              <Link href="/simple-earnings-calculator">
+                <a className="text-hpgreen-100">here.</a>
+              </Link>
+            </p>
+          </div>
+        </section>
+        <section className="bg-gray-200 w-full flex items-center lg:items-start justify-end flex-col pb-64">
+          <div className="max-w-xl w-full lg:max-w-5xl mx-auto px-4 lg:px-12 lg:-mt-24 mt-10">
+            {editingValues ? (
+              <div className="bg-hpblue-800 w-full rounded-xl">
+                {hotspots.map((hotspot) => {
+                  return (
+                    <HotspotCalculatorRow
+                      name={hotspot.name}
+                      addRowHandler={addRow}
+                      removeRowHandler={() => removeRow(hotspot.number)}
+                      firstRow={hotspot.number === 1}
+                      lastRow={hotspot.number === hotspots.length}
+                      density1Handler={() => setDensity(1, hotspot.number)}
+                      density2Handler={() => setDensity(2, hotspot.number)}
+                      density3Handler={() => setDensity(3, hotspot.number)}
+                      selectedDensity={hotspot.hotspotDensitySelection}
+                      calculateFunction={flipBetweenEditingAndCalculating}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-hpblue-800 w-full rounded-xl">
+                {hotspots.map((hotspot, index) => {
+                  let hotspotEarnings = 0;
 
-          <main>
-            <div className="pb-10">
-              <h1
-                css={css`
-                  font-size: 2.25em;
-                  margin-bottom: 0.8888889em;
-                  line-height: 1.1111111;
-                  font-family: Sora;
-                  font-weight: 600 !important;
-                  color: ${hpWhite} !important;
+                  let loneWolfness = hotspot.hotspotDensitySelection;
 
-                  padding-top: 8rem;
+                  let challengerRewards =
+                    (monthlyRewardsInRealNumbers * challengerPercent) /
+                    numberOfActiveHotspots;
 
-                  @media screen and (max-width: 500px) {
-                    padding-top: 2rem;
+                  hotspotEarnings += challengerRewards;
+
+                  let challengeeRewards =
+                    (monthlyRewardsInRealNumbers * challengeePercent) /
+                    (numberOfActiveHotspots * 0.65);
+
+                  let witnessRewards =
+                    (monthlyRewardsInRealNumbers * witnessPercent) /
+                    (numberOfActiveHotspots * 0.65);
+
+                  let consensusRewards =
+                    monthlyRewardsInRealNumbers *
+                    consensusPercent *
+                    (1 / numberOfActiveHotspots);
+
+                  let dataRewards =
+                    (monthlyRewardsInRealNumbers * dcPercent) /
+                    (numberOfActiveHotspots * 0.4);
+
+                  if (loneWolfness > 1) {
+                    hotspotEarnings += challengeeRewards;
+                    hotspotEarnings += witnessRewards;
+
+                    if (loneWolfness > 2) {
+                      hotspotEarnings += consensusRewards;
+                      hotspotEarnings += dataRewards;
+                    }
                   }
-                `}
-                className=""
-              >
-                Helium Hotspot Earnings Calculator
-              </h1>
-              <Prose>
-                This tool can be used to give a rough estimate of how much HNT
-                your hotspot might earn, based on its situation and the current
-                state of the Helium network and the current HNT reward
-                distrubtion.
-              </Prose>
-              <Prose>
-                A much simpler version of this tool can be found{" "}
-                <Link href="/simple-earnings-calculator">
-                  <a href="/simple-earnings-calculator">here.</a>
-                </Link>
-              </Prose>
-            </div>
-            <div
-              css={css`
-                background-color: #1e2b37;
-                width: 100%;
-                border-radius: 15px;
 
-                box-shadow: 0 0 75px 10px rgba(7, 14, 21, 0.25);
-              `}
-            >
-              {hotspots.map((hotspot) => {
-                return (
-                  <HotspotCalculatorRow
-                    name={hotspot.name}
-                    addRowHandler={addRow}
-                    removeRowHandler={() => removeRow(hotspot.number)}
-                    firstRow={hotspot.number === 1}
-                    lastRow={hotspot.number === hotspots.length}
-                    density1Handler={() => setDensity(1, hotspot.number)}
-                    density2Handler={() => setDensity(2, hotspot.number)}
-                    density3Handler={() => setDensity(3, hotspot.number)}
-                    selectedDensity={hotspot.hotspotDensitySelection}
-                    calculateFunction={flipBetweenEditingAndCalculating}
-                  />
-                );
-              })}
-            </div>
-          </main>
-        </div>
-      ) : (
-        <div
-          className="flex align-center justify-center"
-          css={css`
-            width: auto;
-            margin: 2rem auto;
-            padding: 2rem;
-            max-width: 900px;
+                  totalEarnings += hotspotEarnings;
 
-            @media screen and (max-width: 500px) {
-              margin: 1rem auto;
-              max-width: 400px;
-            }
-          `}
-        >
-          <Head>
-            <title>Helium Hotspot Earnings Calculator</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-
-          <main>
-            <div className="pb-10">
-              <h1
-                css={css`
-                  font-size: 2.25em;
-                  margin-bottom: 0.8888889em;
-                  line-height: 1.1111111;
-                  font-family: Sora;
-                  font-weight: 600 !important;
-                  color: ${hpWhite} !important;
-
-                  padding-top: 8rem;
-
-                  @media screen and (max-width: 500px) {
-                    padding-top: 2rem;
-                  }
-                `}
-                className=""
-              >
-                Helium Hotspot Earnings Calculator
-              </h1>
-              <Prose>
-                This tool can be used to give a rough estimate of how much HNT
-                your hotspot might earn, based on its situation and the current
-                state of the Helium network and the current HNT reward
-                distrubtion.
-              </Prose>
-              <Prose>
-                A much simpler version of this tool can be found{" "}
-                <Link href="/simple-earnings-calculator">
-                  <a href="/simple-earnings-calculator">here.</a>
-                </Link>
-              </Prose>
-            </div>
-            <div
-              css={css`
-                background-color: #1e2b37;
-                width: 100%;
-                border-radius: 15px;
-
-                box-shadow: 0 0 75px 10px rgba(7, 14, 21, 0.25);
-              `}
-            >
-              {hotspots.map((hotspot, index) => {
-                let hotspotEarnings = 0;
-
-                let loneWolfness = hotspot.hotspotDensitySelection;
-
-                let challengerRewards =
-                  (monthlyRewardsInRealNumbers * challengerPercent) /
-                  numberOfActiveHotspots;
-
-                hotspotEarnings += challengerRewards;
-
-                let challengeeRewards =
-                  (monthlyRewardsInRealNumbers * challengeePercent) /
-                  (numberOfActiveHotspots * 0.65);
-
-                let witnessRewards =
-                  (monthlyRewardsInRealNumbers * witnessPercent) /
-                  (numberOfActiveHotspots * 0.65);
-
-                let consensusRewards =
-                  monthlyRewardsInRealNumbers *
-                  consensusPercent *
-                  (1 / numberOfActiveHotspots);
-
-                let dataRewards =
-                  (monthlyRewardsInRealNumbers * dcPercent) /
-                  (numberOfActiveHotspots * 0.4);
-
-                if (loneWolfness > 1) {
-                  hotspotEarnings += challengeeRewards;
-                  hotspotEarnings += witnessRewards;
-
-                  if (loneWolfness > 2) {
-                    hotspotEarnings += consensusRewards;
-                    hotspotEarnings += dataRewards;
-                  }
-                }
-
-                totalEarnings += hotspotEarnings;
-
-                return (
-                  <>
-                    <div
-                      css={css`
-                        margin-bottom: 20px;
-                        color: #777;
-                      `}
-                    >
-                      <p className="p-5 text-black">Hotspot {hotspot.number}</p>
-                      <table
-                        css={css`
-                          width: 100%;
-                        `}
-                      >
-                        <tbody>
-                          <tr>
-                            <td className="p-5">
-                              Reward type:
-                              <p
-                                css={css`
-                                  font-size: 20px;
-                                  color: white;
-                                `}
-                              >
-                                Challenger ({challengerPercent * 100}%)
-                              </p>
-                            </td>
-                            <td className="p-5">
-                              Total available per month:
-                              <p
-                                css={css`
-                                  font-size: 20px;
-                                  color: white;
-                                `}
-                              >
-                                {monthlyRewardsInRealNumbers *
-                                  challengerPercent}
-                              </p>
-                              <ShowMathButton
-                                onClick={() =>
-                                  updateRewardsMathShowingState("challenger-1")
-                                }
-                              >
-                                Show math
-                              </ShowMathButton>
-                              {console.log(rewardsShowingState)}
-                              {rewardsShowingState.challenger
-                                .totalAvailable && <p>Math: blah blah blah</p>}
-                            </td>
-                            <td className="p-5">
-                              Likely earnings per month:
-                              <p
-                                css={css`
-                                  font-size: 20px;
-                                  color: white;
-                                `}
-                              >
-                                {challengerRewards.toFixed(2)} HNT
-                              </p>
-                            </td>
-                            <td
-                              css={css`
-                                font-size: 24px;
-                                color: #aaa;
-                                text-align: right;
-                              `}
-                              className="p-5"
-                            >
-                              {challengerRewards.toFixed(2)} HNT
-                            </td>
-                          </tr>
-                          {loneWolfness > 1 && (
-                            <>
-                              <tr>
-                                <td className="p-5">
-                                  Reward type:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    Challengee ({challengeePercent * 100}%)
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Total available per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {monthlyRewardsInRealNumbers *
-                                      challengeePercent}
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Likely earnings per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {challengeeRewards.toFixed(2)} HNT
-                                  </p>
-                                </td>
-                                <td
-                                  css={css`
-                                    font-size: 24px;
-                                    color: #aaa;
-                                    text-align: right;
-                                  `}
-                                  className="p-5"
-                                >
-                                  {challengeeRewards.toFixed(2)} HNT
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="p-5">
-                                  Reward type:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    Witness ({witnessPercent * 100}%)
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Total available per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {monthlyRewardsInRealNumbers *
-                                      witnessPercent}
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Likely earnings per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {witnessRewards.toFixed(2)} HNT
-                                  </p>
-                                </td>
-                                <td
-                                  css={css`
-                                    font-size: 24px;
-                                    color: #aaa;
-                                    text-align: right;
-                                  `}
-                                  className="p-5"
-                                >
-                                  {witnessRewards.toFixed(2)} HNT
-                                </td>
-                              </tr>
-                            </>
-                          )}
-                          {loneWolfness > 2 && (
-                            <>
-                              <tr>
-                                <td className="p-5">
-                                  Reward type:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    Consensus ({consensusPercent * 100}%)
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Total available per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {monthlyRewardsInRealNumbers *
-                                      consensusPercent}
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Likely earnings per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {consensusRewards.toFixed(2)} HNT
-                                  </p>
-                                </td>
-                                <td
-                                  css={css`
-                                    font-size: 24px;
-                                    color: #aaa;
-                                    text-align: right;
-                                  `}
-                                  className="p-5"
-                                >
-                                  {consensusRewards.toFixed(2)} HNT
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="p-5">
-                                  Reward type:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    Data Transfer ({dcPercent * 100}%)
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Total available per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {monthlyRewardsInRealNumbers * dcPercent}
-                                  </p>
-                                </td>
-                                <td className="p-5">
-                                  Likely earnings per month:
-                                  <p
-                                    css={css`
-                                      font-size: 20px;
-                                      color: white;
-                                    `}
-                                  >
-                                    {dataRewards.toFixed(2)} HNT
-                                  </p>
-                                </td>
-                                <td
-                                  css={css`
-                                    font-size: 24px;
-                                    color: #aaa;
-                                    text-align: right;
-                                  `}
-                                  className="p-5"
-                                >
-                                  {dataRewards.toFixed(2)} HNT
-                                </td>
-                              </tr>
-                            </>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                    {hotspots.length > 1 && (
-                      <div className="flex justify-end align-center">
-                        <p
-                          css={css`
-                            color: ${hpLightGrey};
-                            font-size: 36px;
-                            text-align: right;
-                          `}
-                          className="p-5"
-                        >
-                          {hotspotEarnings.toFixed(2)} HNT
-                        </p>
-                      </div>
-                    )}
-
-                    {index + 1 !== hotspots.length && (
+                  return (
+                    <>
                       <div
                         css={css`
-                          background-color: #070e15;
-                          height: 1px;
-                          width: 100%;
+                          margin-bottom: 20px;
+                          color: #777;
                         `}
-                      />
-                    )}
-                  </>
-                );
-              })}
-              <div
-                css={css`
-                  background-color: #334a60;
-                  height: 1px;
-                  width: 30%;
-                  margin-left: auto;
-                  margin-right: 15px;
-                `}
-              />
-              <div className="flex flex-col justify-end align-center">
-                <p
+                      >
+                        <p className="p-5 text-black">
+                          Hotspot {hotspot.number}
+                        </p>
+                        <table
+                          css={css`
+                            width: 100%;
+                          `}
+                        >
+                          <tbody>
+                            <tr>
+                              <td className="p-5">
+                                Reward type:
+                                <p
+                                  css={css`
+                                    font-size: 20px;
+                                    color: white;
+                                  `}
+                                >
+                                  Challenger ({challengerPercent * 100}%)
+                                </p>
+                              </td>
+                              <td className="p-5">
+                                Total available per month:
+                                <p
+                                  css={css`
+                                    font-size: 20px;
+                                    color: white;
+                                  `}
+                                >
+                                  {monthlyRewardsInRealNumbers *
+                                    challengerPercent}
+                                </p>
+                                <ShowMathButton
+                                  onClick={() =>
+                                    updateRewardsMathShowingState(
+                                      "challenger-1"
+                                    )
+                                  }
+                                >
+                                  Show math
+                                </ShowMathButton>
+                                {console.log(rewardsShowingState)}
+                                {rewardsShowingState.challenger
+                                  .totalAvailable && (
+                                  <p>Math: blah blah blah</p>
+                                )}
+                              </td>
+                              <td className="p-5">
+                                Likely earnings per month:
+                                <p
+                                  css={css`
+                                    font-size: 20px;
+                                    color: white;
+                                  `}
+                                >
+                                  {challengerRewards.toFixed(2)} HNT
+                                </p>
+                              </td>
+                              <td
+                                css={css`
+                                  font-size: 24px;
+                                  color: #aaa;
+                                  text-align: right;
+                                `}
+                                className="p-5"
+                              >
+                                {challengerRewards.toFixed(2)} HNT
+                              </td>
+                            </tr>
+                            {loneWolfness > 1 && (
+                              <>
+                                <tr>
+                                  <td className="p-5">
+                                    Reward type:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      Challengee ({challengeePercent * 100}%)
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Total available per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {monthlyRewardsInRealNumbers *
+                                        challengeePercent}
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Likely earnings per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {challengeeRewards.toFixed(2)} HNT
+                                    </p>
+                                  </td>
+                                  <td
+                                    css={css`
+                                      font-size: 24px;
+                                      color: #aaa;
+                                      text-align: right;
+                                    `}
+                                    className="p-5"
+                                  >
+                                    {challengeeRewards.toFixed(2)} HNT
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="p-5">
+                                    Reward type:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      Witness ({witnessPercent * 100}%)
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Total available per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {monthlyRewardsInRealNumbers *
+                                        witnessPercent}
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Likely earnings per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {witnessRewards.toFixed(2)} HNT
+                                    </p>
+                                  </td>
+                                  <td
+                                    css={css`
+                                      font-size: 24px;
+                                      color: #aaa;
+                                      text-align: right;
+                                    `}
+                                    className="p-5"
+                                  >
+                                    {witnessRewards.toFixed(2)} HNT
+                                  </td>
+                                </tr>
+                              </>
+                            )}
+                            {loneWolfness > 2 && (
+                              <>
+                                <tr>
+                                  <td className="p-5">
+                                    Reward type:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      Consensus ({consensusPercent * 100}%)
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Total available per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {monthlyRewardsInRealNumbers *
+                                        consensusPercent}
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Likely earnings per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {consensusRewards.toFixed(2)} HNT
+                                    </p>
+                                  </td>
+                                  <td
+                                    css={css`
+                                      font-size: 24px;
+                                      color: #aaa;
+                                      text-align: right;
+                                    `}
+                                    className="p-5"
+                                  >
+                                    {consensusRewards.toFixed(2)} HNT
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="p-5">
+                                    Reward type:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      Data Transfer ({dcPercent * 100}%)
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Total available per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {monthlyRewardsInRealNumbers * dcPercent}
+                                    </p>
+                                  </td>
+                                  <td className="p-5">
+                                    Likely earnings per month:
+                                    <p
+                                      css={css`
+                                        font-size: 20px;
+                                        color: white;
+                                      `}
+                                    >
+                                      {dataRewards.toFixed(2)} HNT
+                                    </p>
+                                  </td>
+                                  <td
+                                    css={css`
+                                      font-size: 24px;
+                                      color: #aaa;
+                                      text-align: right;
+                                    `}
+                                    className="p-5"
+                                  >
+                                    {dataRewards.toFixed(2)} HNT
+                                  </td>
+                                </tr>
+                              </>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                      {hotspots.length > 1 && (
+                        <div className="flex justify-end align-center">
+                          <p
+                            css={css`
+                              color: ${hpLightGrey};
+                              font-size: 36px;
+                              text-align: right;
+                            `}
+                            className="p-5"
+                          >
+                            {hotspotEarnings.toFixed(2)} HNT
+                          </p>
+                        </div>
+                      )}
+
+                      {index + 1 !== hotspots.length && (
+                        <div
+                          css={css`
+                            background-color: #070e15;
+                            height: 1px;
+                            width: 100%;
+                          `}
+                        />
+                      )}
+                    </>
+                  );
+                })}
+                <div
                   css={css`
-                    color: ${hpGreen};
-                    font-size: 36px;
-                    text-align: right;
+                    background-color: #334a60;
+                    height: 1px;
+                    width: 30%;
+                    margin-left: auto;
+                    margin-right: 15px;
                   `}
-                  className="pr-5 pt-5 pl-5"
-                >
-                  {totalEarnings.toFixed(2)} HNT
-                </p>
-                <p
+                />
+                <div className="flex flex-col justify-end align-center">
+                  <p
+                    css={css`
+                      color: ${hpGreen};
+                      font-size: 36px;
+                      text-align: right;
+                    `}
+                    className="pr-5 pt-5 pl-5"
+                  >
+                    {totalEarnings.toFixed(2)} HNT
+                  </p>
+                  <p
+                    css={css`
+                      color: #777;
+                      font-size: 12px;
+                      text-align: right;
+                    `}
+                    className="pr-5 pb-5"
+                  >
+                    per month
+                  </p>
+                </div>
+                <div
                   css={css`
-                    color: #777;
-                    font-size: 12px;
-                    text-align: right;
+                    background-color: #070e15;
+                    border-radius: 0 0 15px 15px;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: row;
                   `}
-                  className="pr-5 pb-5"
                 >
-                  per month
-                </p>
+                  <EditButton onClick={flipBetweenEditingAndCalculating}>
+                    Edit values
+                  </EditButton>
+                  <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
+                    Restart
+                  </SecondaryButton>
+                  <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
+                    Share results
+                  </SecondaryButton>
+                </div>
               </div>
-              <div
-                css={css`
-                  background-color: #070e15;
-                  border-radius: 0 0 15px 15px;
-                  padding: 20px;
-                  display: flex;
-                  flex-direction: row;
-                `}
-              >
-                <EditButton onClick={flipBetweenEditingAndCalculating}>
-                  Edit values
-                </EditButton>
-                <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
-                  Restart
-                </SecondaryButton>
-                <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
-                  Share results
-                </SecondaryButton>
-              </div>
-            </div>
-          </main>
-        </div>
-      )}
+            )}
+          </div>
+        </section>
+      </main>
     </>
   );
 };
