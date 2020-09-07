@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import CurrencyFormat from "react-currency-format";
 
 import HotspotCalculatorRow from "../components/HotspotCalculatorRow";
+import Button from "../components/core/Button";
 
 const hpGreen = `#42DE9F`;
 const hpBlue = `#42D1E4`;
@@ -156,6 +157,24 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     }
   };
 
+  const restartEditing = () => {
+    let resetHotspotsArray = [
+      {
+        number: 1,
+        name: `Hotspot 1`,
+        hotspotDensityManual: false,
+        hotspotDensityManualArray: [
+          { name: `Nearby hotspot 1`, metersAway: 500 },
+        ],
+        hotspotDensitySelection: 0,
+      },
+    ];
+
+    setHotspots(resetHotspotsArray);
+
+    setEditingValues(true);
+  };
+
   const EditButton = styled.button`
     height: 40px;
     background-color: #42de9f;
@@ -232,47 +251,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     },
   });
 
-  const updateRewardsMathShowingState = (input) => {
-    let tempStateObject = rewardsShowingState;
-
-    console.log(!tempStateObject.challenger.totalAvailable);
-
-    switch (input) {
-      case "challenger-1":
-        tempStateObject.challenger.totalAvailable = true;
-        break;
-      case "challenger-2":
-        tempStateObject.challenger.likelyPerEpoch = true;
-        break;
-      case "challengee-1":
-        tempStateObject.challengee.likelyPerEpoch = true;
-        break;
-      case "challenger-2":
-        tempStateObject.challengee.likelyPerEpoch = true;
-        break;
-      case "witness-1":
-        tempStateObject.witness.likelyPerEpoch = true;
-        break;
-      case "witness-2":
-        tempStateObject.witness.likelyPerEpoch = true;
-        break;
-      case "consensus-1":
-        tempStateObject.consensus.likelyPerEpoch = true;
-        break;
-      case "consensus-2":
-        tempStateObject.consensus.likelyPerEpoch = true;
-        break;
-      case "data-1":
-        tempStateObject.data.likelyPerEpoch = true;
-        break;
-      case "data-2":
-        tempStateObject.data.likelyPerEpoch = true;
-        break;
-    }
-    setRewardsShowingState(tempStateObject);
-  };
-  useEffect(() => {}, [rewardsShowingState]);
-
   return (
     <>
       <NavBar />
@@ -296,7 +274,9 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
             <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
               A much simpler version of this tool can be found{" "}
               <Link href="/simple-earnings-calculator">
-                <a className="text-hpgreen-100">here.</a>
+                <a className="text-hpgreen-100 focus:outline-none focus:border-none">
+                  here.
+                </a>
               </Link>
             </p>
           </div>
@@ -309,19 +289,41 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                   return (
                     <HotspotCalculatorRow
                       name={hotspot.name}
-                      addRowHandler={addRow}
+                      // addRowHandler={addRow}
                       removeRowHandler={() => removeRow(hotspot.number)}
                       firstRow={hotspot.number === 1}
-                      lastRow={hotspot.number === hotspots.length}
+                      // lastRow={hotspot.number === hotspots.length}
                       density1Handler={() => setDensity(1, hotspot.number)}
                       density2Handler={() => setDensity(2, hotspot.number)}
                       density3Handler={() => setDensity(3, hotspot.number)}
                       selectedDensity={hotspot.hotspotDensitySelection}
-                      calculateFunction={flipBetweenEditingAndCalculating}
-                      warningMessage={warningMessage}
+                      // calculateFunction={flipBetweenEditingAndCalculating}
+                      // warningMessage={warningMessage}
                     />
                   );
                 })}
+                <div className="px-8 py-5 bg-hpblue-1000 rounded-b-xl">
+                  {warningMessage !== "" && (
+                    <p className="text-hpgreen-100 font-body font-bold pb-4">
+                      {warningMessage}
+                    </p>
+                  )}
+                  <div className="flex flex-row">
+                    <Button
+                      buttonForegroundColor="black"
+                      buttonBackgroundColor="hpgreen-100"
+                      onClick={flipBetweenEditingAndCalculating}
+                      buttonText="See results"
+                    />
+                    <Button
+                      buttonForegroundColor="gray-600"
+                      buttonBackgroundColor="hpblue-800"
+                      onClick={addRow}
+                      buttonText="Add hotspot"
+                      buttonIcon="plus"
+                    />
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="bg-hpblue-800 w-full rounded-xl">
@@ -367,274 +369,21 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
                   return (
                     <>
-                      <div
-                        css={css`
-                          margin-bottom: 20px;
-                          color: #777;
-                        `}
-                      >
-                        <p className="p-5 text-black">
-                          Hotspot {hotspot.number}
-                        </p>
-                        <table
-                          css={css`
-                            width: 100%;
-                          `}
-                        >
-                          <tbody>
-                            <tr>
-                              <td className="p-5">
-                                Reward type:
-                                <p
-                                  css={css`
-                                    font-size: 20px;
-                                    color: white;
-                                  `}
-                                >
-                                  Challenger ({challengerPercent * 100}%)
-                                </p>
-                              </td>
-                              <td className="p-5">
-                                Total available per month:
-                                <p
-                                  css={css`
-                                    font-size: 20px;
-                                    color: white;
-                                  `}
-                                >
-                                  {monthlyRewardsInRealNumbers *
-                                    challengerPercent}
-                                </p>
-                                <ShowMathButton
-                                  onClick={() =>
-                                    updateRewardsMathShowingState(
-                                      "challenger-1"
-                                    )
-                                  }
-                                >
-                                  Show math
-                                </ShowMathButton>
-                                {console.log(rewardsShowingState)}
-                                {rewardsShowingState.challenger
-                                  .totalAvailable && (
-                                  <p>Math: blah blah blah</p>
-                                )}
-                              </td>
-                              <td className="p-5">
-                                Likely earnings per month:
-                                <p
-                                  css={css`
-                                    font-size: 20px;
-                                    color: white;
-                                  `}
-                                >
-                                  {challengerRewards.toFixed(2)} HNT
-                                </p>
-                              </td>
-                              <td
-                                css={css`
-                                  font-size: 24px;
-                                  color: #aaa;
-                                  text-align: right;
-                                `}
-                                className="p-5"
-                              >
-                                {challengerRewards.toFixed(2)} HNT
-                              </td>
-                            </tr>
-                            {loneWolfness > 1 && (
-                              <>
-                                <tr>
-                                  <td className="p-5">
-                                    Reward type:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      Challengee ({challengeePercent * 100}%)
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Total available per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {monthlyRewardsInRealNumbers *
-                                        challengeePercent}
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Likely earnings per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {challengeeRewards.toFixed(2)} HNT
-                                    </p>
-                                  </td>
-                                  <td
-                                    css={css`
-                                      font-size: 24px;
-                                      color: #aaa;
-                                      text-align: right;
-                                    `}
-                                    className="p-5"
-                                  >
-                                    {challengeeRewards.toFixed(2)} HNT
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="p-5">
-                                    Reward type:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      Witness ({witnessPercent * 100}%)
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Total available per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {monthlyRewardsInRealNumbers *
-                                        witnessPercent}
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Likely earnings per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {witnessRewards.toFixed(2)} HNT
-                                    </p>
-                                  </td>
-                                  <td
-                                    css={css`
-                                      font-size: 24px;
-                                      color: #aaa;
-                                      text-align: right;
-                                    `}
-                                    className="p-5"
-                                  >
-                                    {witnessRewards.toFixed(2)} HNT
-                                  </td>
-                                </tr>
-                              </>
-                            )}
-                            {loneWolfness > 2 && (
-                              <>
-                                <tr>
-                                  <td className="p-5">
-                                    Reward type:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      Consensus ({consensusPercent * 100}%)
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Total available per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {monthlyRewardsInRealNumbers *
-                                        consensusPercent}
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Likely earnings per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {consensusRewards.toFixed(2)} HNT
-                                    </p>
-                                  </td>
-                                  <td
-                                    css={css`
-                                      font-size: 24px;
-                                      color: #aaa;
-                                      text-align: right;
-                                    `}
-                                    className="p-5"
-                                  >
-                                    {consensusRewards.toFixed(2)} HNT
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="p-5">
-                                    Reward type:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      Data Transfer ({dcPercent * 100}%)
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Total available per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {monthlyRewardsInRealNumbers * dcPercent}
-                                    </p>
-                                  </td>
-                                  <td className="p-5">
-                                    Likely earnings per month:
-                                    <p
-                                      css={css`
-                                        font-size: 20px;
-                                        color: white;
-                                      `}
-                                    >
-                                      {dataRewards.toFixed(2)} HNT
-                                    </p>
-                                  </td>
-                                  <td
-                                    css={css`
-                                      font-size: 24px;
-                                      color: #aaa;
-                                      text-align: right;
-                                    `}
-                                    className="p-5"
-                                  >
-                                    {dataRewards.toFixed(2)} HNT
-                                  </td>
-                                </tr>
-                              </>
-                            )}
-                          </tbody>
-                        </table>
+                      <div>
+                        <div className="flex flex-row">
+                          <div className="bg-black p-3 rounded-b-lg ml-6 flex flex-row items-center">
+                            <p className="font-display text-hpgreen-100">
+                              Hotspot {hotspot.number}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Container */}
+                        <div className="px-8 pb-10 pt-10">
+                          <p className="text-white text-xl">
+                            Challenger rewards
+                          </p>
+                        </div>
                       </div>
                       {hotspots.length > 1 && (
                         <div className="flex justify-end align-center">
@@ -673,14 +422,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                   `}
                 />
                 <div className="flex flex-col justify-end align-center">
-                  <p
-                    css={css`
-                      color: ${hpGreen};
-                      font-size: 36px;
-                      text-align: right;
-                    `}
-                    className="pr-5 pt-5 pl-5"
-                  >
+                  <p className="text-hpgreen-100 text-4xl text-right p-5">
                     {totalEarnings.toFixed(2)} HNT
                   </p>
                   <p
@@ -694,24 +436,28 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     per month
                   </p>
                 </div>
-                <div
-                  css={css`
-                    background-color: #070e15;
-                    border-radius: 0 0 15px 15px;
-                    padding: 20px;
-                    display: flex;
-                    flex-direction: row;
-                  `}
-                >
-                  <EditButton onClick={flipBetweenEditingAndCalculating}>
-                    Edit values
-                  </EditButton>
-                  <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
-                    Restart
-                  </SecondaryButton>
-                  <SecondaryButton onClick={flipBetweenEditingAndCalculating}>
-                    Share results
-                  </SecondaryButton>
+                <div className="px-8 py-5 bg-hpblue-1000 rounded-b-xl">
+                  {warningMessage !== "" && (
+                    <p className="text-hpgreen-100 font-body font-bold pb-4">
+                      {warningMessage}
+                    </p>
+                  )}
+                  <div className="flex flex-row">
+                    <Button
+                      buttonForegroundColor="black"
+                      buttonBackgroundColor="hpgreen-100"
+                      onClick={flipBetweenEditingAndCalculating}
+                      buttonText="Edit values"
+                      buttonIcon="back"
+                    />
+                    <Button
+                      buttonForegroundColor="gray-600"
+                      buttonBackgroundColor="hpblue-800"
+                      onClick={restartEditing}
+                      buttonText="Restart"
+                      buttonIcon="refresh"
+                    />
+                  </div>
                 </div>
               </div>
             )}

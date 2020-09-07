@@ -1,16 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 a:focus {
   box-shadow: 0 0 0 3px rgba(66, 225, 183, 0.31);
-  outline: none;
-  border: none;
+  /* outline: none;
+  border: none; */
 }
 button:focus {
   box-shadow: 0 0 0 3px rgba(66, 225, 183, 0.31);
-  outline: none;
-  border: none;
+  /* outline: none;
+  border: none; */
 }
 
 .link:focus {
@@ -34,3 +30,7 @@ body {
   color: black;
   background: #42de9f;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
