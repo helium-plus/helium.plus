@@ -39,17 +39,27 @@ const NavBar = () => {
         <div className="flex mx-auto w-full max-w-xl lg:max-w-4xl p-4 ">
           <div className="flex items-center justify-between w-full">
             <Link href="/">
-              <a className="">
+              <a className="focus:outline-none focus:border-none">
                 <img src="/lockup.png" className="flex w-auto h-6" />
               </a>
             </Link>
 
             <div>
               <Link href="/earnings-calculator">
-                <NavBarLink href="earnings-calculator">Calculator</NavBarLink>
+                <NavBarLink
+                  className="focus:outline-none focus:border-none"
+                  href="earnings-calculator"
+                >
+                  Calculator
+                </NavBarLink>
               </Link>
               <Link href="/about">
-                <NavBarLink href="about">About</NavBarLink>
+                <NavBarLink
+                  className="focus:outline-none focus:border-none"
+                  href="about"
+                >
+                  About
+                </NavBarLink>
               </Link>
 
               {/* <NavBarLink

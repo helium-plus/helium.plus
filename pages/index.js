@@ -20,7 +20,7 @@ export default function Home() {
       </Head>
 
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
-        <section className="p-4 flex items-start lg:items-start justify-end flex-col lg:flex-row lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">
+        <section className="p-4 flex items-start lg:items-start justify-end flex-col lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">
           <div className="h-auto lg:pb-6 w-1/3 lg:w-1/2 lg:pt-12">
             <img className="w-full" src="/hotspot.png" />
           </div>
