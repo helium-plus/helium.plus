@@ -650,12 +650,25 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     {hotspots.length > 1 ? "These hotspots" : "This hotspot"}{" "}
                     will likely earn around
                   </p>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col justify-end align-end">
                     <p className="text-black leading-tight font-bold font-display text-4xl text-right">
                       {formatNumber(totalEarnings, "HNT", 2)}
                     </p>
                     <p className="font-display text-xl text-gray-900 text-right">
                       in total per month.
+                    </p>
+                    <p className="pt-5 font-display text-xl text-gray-900 text-right">
+                      That's
+                    </p>
+                    <p className="text-black leading-tight font-bold font-display text-4xl text-right">
+                      {formatNumber(
+                        totalEarnings * hntUsdExchangeRate,
+                        "USD",
+                        2
+                      )}
+                    </p>
+                    <p className="font-display text-xl text-gray-900 text-right">
+                      at the current HNT/USD exchange rate.
                     </p>
                   </div>
                 </div>
