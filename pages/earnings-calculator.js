@@ -162,14 +162,80 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     setEditingValues(true);
   };
 
+  // Rewards split
   const monthlyRewards = chainVars.data.monthly_reward;
   const monthlyRewardsInHnt = monthlyRewards / 100000000;
-  const dcPercent = chainVars.data.dc_percent;
-  const witnessPercent = chainVars.data.poc_witnesses_percent;
   const challengerPercent = chainVars.data.poc_challengers_percent;
   const challengeePercent = chainVars.data.poc_challengees_percent;
+  const witnessPercent = chainVars.data.poc_witnesses_percent;
   const consensusPercent = chainVars.data.consensus_percent;
+  const dcPercent = chainVars.data.dc_percent;
 
+  // Constants from API
+  const numberOfActiveHotspots = stats.data.counts.hotspots;
+
+  const monthlyDataSpendInDataCredits =
+    stats.data.state_channel_counts.last_month.num_dcs;
+  const monthlyDataSpendInUsd = monthlyDataSpendInDataCredits * 0.00001;
+  // console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
+  const monthlyDataSpendInHnt =
+    monthlyDataSpendInUsd / (priceData.data.price / 100000000);
+
+  // TODO: make based on current date instead of hardcoded
+  const yearForCalculatorInitialValue = 2020;
+  const [
+    yearForCalculatorInputEmpty,
+    setYearForCalculatorInputEmpty,
+  ] = useState(false);
+  const [yearForCalculator, setYearForCalculator] = useState(
+    yearForCalculatorInitialValue
+  );
+
+  const [
+    monthlyDataSpendInDataCreditsInputEmpty,
+    setMonthlyDataSpendInDataCreditsInputEmpty,
+  ] = useState(false);
+  const [
+    monthlyDataSpendInDataCreditsInput,
+    setMonthlyDataSpendInDataCreditsInput,
+  ] = useState(monthlyDataSpendInDataCredits);
+
+  const [activeHotspotsInputEmpty, setActiveHotspotsInputEmpty] = useState(
+    false
+  );
+  const [activeHotspotsInput, setActiveHotspotsInput] = useState(
+    numberOfActiveHotspots
+  );
+
+  const [usdHntInputEmpty, setUsdHntInputEmpty] = useState(false);
+  const [usdHntInput, setUsdHntInput] = useState(hntUsdExchangeRate);
+
+  const challengerPercentAnnualChange = -0.0005;
+  const challengeePercentAnnualChange = -0.01;
+  const witnessPercentAnnualChange = -0.0045;
+  const consensusPercentAnnualChange = 0;
+  const dcPercentAnnualChange = 0.025;
+
+  const calculateProjectedPercent = (initialPercent, annualChange) => {
+    if (yearForCalculator <= yearForCalculatorInitialValue) {
+      return initialPercent;
+    } else {
+      if (yearForCalculator - yearForCalculatorInitialValue >= 20) {
+        return initialPercent * Math.pow(1 + annualChange, 20);
+      } else
+        return (
+          initialPercent *
+          Math.pow(
+            1 + annualChange,
+            yearForCalculator - yearForCalculatorInitialValue
+          )
+        );
+    }
+  };
+
+  // Editable calculator assumptions
+
+  // Editable participation rates
   const initialChallengerParticipationPercent = 99;
   const [
     challengerParticipationPercent,
@@ -218,16 +284,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     false
   );
 
-  const numberOfActiveHotspots = stats.data.counts.hotspots;
-
-  const monthlyDataSpendInDataCredits =
-    stats.data.state_channel_counts.last_month.num_dcs;
-  const monthlyDataSpendInUsd = monthlyDataSpendInDataCredits * 0.00001;
-  console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
-  const monthlyDataSpendInHnt =
-    monthlyDataSpendInUsd / (priceData.data.price / 100000000);
-
-  console.log(`Spend per month in HNT: ${monthlyDataSpendInHnt} HNT`);
+  // console.log(`Spend per month in HNT: ${monthlyDataSpendInHnt} HNT`);
 
   // the amount (in HNT) that will be redistributed if not utilized
   // from HIP10
@@ -237,23 +294,40 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const monthlyUnusedDataRewardsSurplusInHnt =
     dcPercent * monthlyRewardsInHnt * (1 - monthlyDataUsagePercent);
 
-  console.log(`Used: ${monthlyDataUsagePercent * 100}%`);
-  console.log(`Surplus: ${monthlyUnusedDataRewardsSurplusInHnt} HNT`);
+  // console.log(`Used: ${monthlyDataUsagePercent * 100}%`);
+  // console.log(`Surplus: ${monthlyUnusedDataRewardsSurplusInHnt} HNT`);
 
   const surplusRewardTypesCombinedPercentages =
-    challengerPercent + challengeePercent + witnessPercent;
+    calculateProjectedPercent(
+      challengerPercent,
+      challengerPercentAnnualChange
+    ) +
+    calculateProjectedPercent(
+      challengeePercent,
+      challengeePercentAnnualChange
+    ) +
+    calculateProjectedPercent(witnessPercent, witnessPercentAnnualChange);
 
   const challengerSurplusInHnt =
     monthlyUnusedDataRewardsSurplusInHnt *
-    (challengerPercent / surplusRewardTypesCombinedPercentages);
+    (calculateProjectedPercent(
+      challengerPercent,
+      challengerPercentAnnualChange
+    ) /
+      surplusRewardTypesCombinedPercentages);
 
   const challengeeSurplusInHnt =
     monthlyUnusedDataRewardsSurplusInHnt *
-    (challengeePercent / surplusRewardTypesCombinedPercentages);
+    (calculateProjectedPercent(
+      challengeePercent,
+      challengeePercentAnnualChange
+    ) /
+      surplusRewardTypesCombinedPercentages);
 
   const witnessSurplusInHnt =
     monthlyUnusedDataRewardsSurplusInHnt *
-    (witnessPercent / surplusRewardTypesCombinedPercentages);
+    (calculateProjectedPercent(witnessPercent, witnessPercentAnnualChange) /
+      surplusRewardTypesCombinedPercentages);
 
   let totalEarnings = 0;
 
@@ -327,6 +401,60 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
         setDcParticipationInputEmpty(true);
         setDcParticipationPercent(initialDcParticipationPercent);
       }
+    }
+  };
+
+  const calculatorAssumptionsChangeHandler = (e) => {
+    if (e.target.id === "dc-monthly-spend-input") {
+      // if (
+      //   e.target.value !== undefined &&
+      //   e.target.value !== "" &&
+      //   e.target.value > 0
+      // ) {
+      setMonthlyDataSpendInDataCreditsInput(e.target.value);
+      setMonthlyDataSpendInDataCreditsInputEmpty(false);
+      // } else {
+      //   setMonthlyDataSpendInDataCreditsInputEmpty(true);
+      //   setMonthlyDataSpendInDataCreditsInput(monthlyDataSpendInDataCredits);
+      // }
+    } else if (e.target.id === "year-for-calculator") {
+      // if (
+      //   e.target.value !== undefined &&
+      //   e.target.value !== "" &&
+      //   e.target.value > 1 &&
+      //   e.target.value < 2121
+      // ) {
+      setYearForCalculator(e.target.value);
+      setYearForCalculatorInputEmpty(false);
+      // } else {
+      //   setYearForCalculatorInputEmpty(true);
+      //   setYearForCalculator(yearForCalculatorInitialValue);
+      // }
+    } else if (e.target.id === "number-of-hotspots-input") {
+      // if (
+      //   e.target.value !== undefined &&
+      //   e.target.value !== "" &&
+      //   e.target.value > 0 &&
+      //   e.target.value < 2121
+      // ) {
+      setActiveHotspotsInput(e.target.value);
+      setActiveHotspotsInputEmpty(false);
+      // } else {
+      //   setActiveHotspotsInputEmpty(true);
+      //   setActiveHotspotsInput(numberOfActiveHotspots);
+      // }
+    } else if (e.target.id === "usd-hnt-rate-input") {
+      // if (
+      //   e.target.value !== undefined &&
+      //   e.target.value !== "" &&
+      //   e.target.value > 0
+      // ) {
+      setUsdHntInput(e.target.value);
+      setUsdHntInputEmpty(false);
+      // } else {
+      //   setUsdHntInputEmpty(true);
+      //   setUsdHntInput(hntUsdExchangeRate);
+      // }
     }
   };
 
@@ -412,21 +540,33 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                   let loneWolfness = hotspot.hotspotDensitySelection;
 
                   let challengerRewards =
-                    (monthlyRewardsInHnt * challengerPercent) /
+                    (monthlyRewardsInHnt *
+                      calculateProjectedPercent(
+                        challengerPercent,
+                        challengerPercentAnnualChange
+                      )) /
                     (numberOfActiveHotspots *
                       (challengerParticipationPercent / 100));
 
                   let challengeeRewards =
                     loneWolfness === 1
                       ? 0
-                      : (monthlyRewardsInHnt * challengeePercent) /
+                      : (monthlyRewardsInHnt *
+                          calculateProjectedPercent(
+                            challengeePercent,
+                            challengeePercentAnnualChange
+                          )) /
                         (numberOfActiveHotspots *
                           (challengeeParticipationPercent / 100));
 
                   let witnessRewards =
                     loneWolfness === 1
                       ? 0
-                      : (monthlyRewardsInHnt * witnessPercent) /
+                      : (monthlyRewardsInHnt *
+                          calculateProjectedPercent(
+                            witnessPercent,
+                            witnessPercentAnnualChange
+                          )) /
                         (numberOfActiveHotspots *
                           (witnessParticipationPercent / 100));
 
@@ -434,7 +574,10 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     loneWolfness < 3
                       ? 0
                       : monthlyRewardsInHnt *
-                        consensusPercent *
+                        calculateProjectedPercent(
+                          consensusPercent,
+                          consensusPercentAnnualChange
+                        ) *
                         (1 /
                           (numberOfActiveHotspots *
                             (consensusParticipationPercent / 100)));
@@ -470,7 +613,15 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               Challenger rewards
                             </p>
                             <p className="text-gray-600 text-md font-body">
-                              {formatNumber(challengerPercent, "%")} of the{" "}
+                              {formatNumber(
+                                calculateProjectedPercent(
+                                  challengerPercent,
+                                  challengerPercentAnnualChange
+                                ),
+                                "%",
+                                2
+                              )}{" "}
+                              of the{" "}
                               {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                               minted every month, divided between{" "}
                               {formatNumber(
@@ -502,7 +653,17 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                 </>
                               ) : (
                                 <>
-                                  {formatNumber(challengeePercent, "%")} of the{" "}
+                                  {
+                                    (formatNumber(
+                                      calculateProjectedPercent(
+                                        challengeePercent,
+                                        challengeePercentAnnualChange
+                                      ),
+                                      "%"
+                                    ),
+                                    2)
+                                  }{" "}
+                                  of the{" "}
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, divided between{" "}
                                   {formatNumber(
@@ -537,7 +698,15 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                 </>
                               ) : (
                                 <>
-                                  {formatNumber(witnessPercent, "%")} of the{" "}
+                                  {formatNumber(
+                                    calculateProjectedPercent(
+                                      witnessPercent,
+                                      witnessPercentAnnualChange
+                                    ),
+                                    "%",
+                                    2
+                                  )}{" "}
+                                  of the{" "}
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, divided between{" "}
                                   {formatNumber(
@@ -572,7 +741,15 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                 </>
                               ) : (
                                 <>
-                                  {formatNumber(consensusPercent, "%")} of the{" "}
+                                  {formatNumber(
+                                    calculateProjectedPercent(
+                                      consensusPercent,
+                                      consensusPercentAnnualChange
+                                    ),
+                                    "%",
+                                    2
+                                  )}{" "}
+                                  of the{" "}
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, assuming your hotspot has
                                   an equal chance of being elected as the other{" "}
@@ -600,12 +777,27 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               Data transfer rewards
                             </p>
                             <p className="text-gray-600 text-md font-body">
-                              {formatNumber(dcPercent, "%")} of the{" "}
+                              {formatNumber(
+                                calculateProjectedPercent(
+                                  dcPercent,
+                                  dcPercentAnnualChange
+                                ),
+                                "%",
+                                2
+                              )}{" "}
+                              of the{" "}
                               {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                               minted every month, minus the HNT equivalent of
                               any Data Credit purchases required to meet the{" "}
-                              {formatNumber(dcPercent, "%")} allocation, and
-                              divided between{" "}
+                              {formatNumber(
+                                calculateProjectedPercent(
+                                  dcPercent,
+                                  dcPercentAnnualChange
+                                ),
+                                "%",
+                                2
+                              )}{" "}
+                              allocation, and divided between{" "}
                               {formatNumber(
                                 numberOfActiveHotspots *
                                   (dcParticipationPercent / 100),
@@ -619,8 +811,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                             {formatNumber(dataRewards, "HNT", 2)}
                           </p>
                         </div>
-
-                        {/*  */}
                       </div>
                       {hotspots.length > 1 && (
                         <div className="flex justify-end align-center bg-hpblue-900 mb-10">
@@ -662,56 +852,55 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     </p>
                     <p className="text-black leading-tight font-bold font-display text-4xl text-right">
                       {formatNumber(
-                        totalEarnings * hntUsdExchangeRate,
+                        totalEarnings *
+                          (usdHntInput > 0 &&
+                          usdHntInput !== undefined &&
+                          usdHntInput !== ""
+                            ? usdHntInput
+                            : hntUsdExchangeRate),
                         "USD",
                         2
                       )}
                     </p>
                     <p className="font-display text-xl text-gray-900 text-right">
-                      at the current HNT/USD exchange rate.
+                      at{" "}
+                      {usdHntInput > 0 &&
+                      usdHntInput !== undefined &&
+                      usdHntInput !== "" &&
+                      usdHntInput !== hntUsdExchangeRate ? (
+                        <>
+                          an exchange rate of{" "}
+                          {formatNumber(usdHntInput, "USD", 2)}/HNT
+                        </>
+                      ) : (
+                        <>
+                          the current HNT/USD exchange rate of{" "}
+                          {formatNumber(hntUsdExchangeRate, "USD", 2)}/HNT
+                        </>
+                      )}
+                      .
                     </p>
                   </div>
                 </div>
 
                 <div className="bg-hpblue-700 px-4 lg:px-8 py-8">
-                  <div className="pb-6">
-                    <p className="text-xl pb-5 font-display text-gray-300">
-                      Calculator inputs:
-                    </p>
-                    <p className="text-md pb-4 font-display text-gray-500">
-                      HNT minted per month:{" "}
-                      <span className="text-gray-200">
-                        {formatNumber(monthlyRewardsInHnt)}
-                      </span>
-                    </p>
-                    <p className="text-md pb-4 font-display text-gray-500">
-                      Data Credits spend (last 30 days):{" "}
-                      <span className="text-gray-200">
-                        {formatNumber(monthlyDataSpendInDataCredits)}
-                      </span>
-                    </p>
-                    <p className="text-md pb-4 font-display text-gray-500">
-                      Active hotspots:{" "}
-                      <span className="text-gray-200">
-                        {formatNumber(numberOfActiveHotspots)}
-                      </span>
-                    </p>
-                    <p className="text-md pb-4 font-display text-gray-500">
-                      Current USD price of HNT:{" "}
-                      <span className="text-gray-200">
-                        {formatNumber(hntUsdExchangeRate, "USD", 2)}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="pb-6">
-                    <p className="text-xl pb-1 font-display text-gray-300">
+                  <p className="text-xl pb-4 font-display text-gray-300">
+                    Calculator assumptions:
+                  </p>
+
+                  <div className="pb-2">
+                    <p className="text-md font-display text-gray-500">
                       Current HNT rewards distribution:
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
+
+                  <div className="grid grid-cols-2 gap-2 lg:grid-cols-5 pb-4">
                     <HotspotInfoSection
                       rewardName="Challenger"
-                      rewardPercent={challengerPercent}
+                      rewardPercent={calculateProjectedPercent(
+                        challengerPercent,
+                        challengerPercentAnnualChange
+                      )}
                       participationValue={challengerParticipationPercent}
                       participationInputEmptyBoolean={
                         challengerParticipationInputEmpty
@@ -722,7 +911,10 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                     <HotspotInfoSection
                       rewardName="Challengee"
-                      rewardPercent={challengeePercent}
+                      rewardPercent={calculateProjectedPercent(
+                        challengeePercent,
+                        challengeePercentAnnualChange
+                      )}
                       participationValue={challengeeParticipationPercent}
                       participationInputEmptyBoolean={
                         challengeeParticipationInputEmpty
@@ -733,7 +925,10 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                     <HotspotInfoSection
                       rewardName="Witness"
-                      rewardPercent={witnessPercent}
+                      rewardPercent={calculateProjectedPercent(
+                        witnessPercent,
+                        witnessPercentAnnualChange
+                      )}
                       participationValue={witnessParticipationPercent}
                       participationInputEmptyBoolean={
                         witnessParticipationInputEmpty
@@ -744,7 +939,10 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                     <HotspotInfoSection
                       rewardName="Consensus"
-                      rewardPercent={consensusPercent}
+                      rewardPercent={calculateProjectedPercent(
+                        consensusPercent,
+                        consensusPercentAnnualChange
+                      )}
                       participationValue={consensusParticipationPercent}
                       participationInputEmptyBoolean={
                         consensusParticipationInputEmpty
@@ -754,13 +952,95 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                     <HotspotInfoSection
                       rewardName="Data Transfer"
-                      rewardPercent={dcPercent}
+                      rewardPercent={calculateProjectedPercent(
+                        dcPercent,
+                        dcPercentAnnualChange
+                      )}
                       participationValue={dcParticipationPercent}
                       participationInputEmptyBoolean={dcParticipationInputEmpty}
                       rewardTotal={monthlyRewardsInHnt}
                       dcUsage={monthlyUnusedDataRewardsSurplusInHnt}
                       participationChangeHandler={participationChangeHandler}
                     />
+                  </div>
+
+                  <div className="pb-6 grid grid-cols-2">
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                      <p className="text-md font-display text-gray-500">Year</p>
+                      <input
+                        id={`year-for-calculator`}
+                        type="text"
+                        step="1"
+                        pattern="[0-9]*"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        value={yearForCalculator}
+                        placeholder={yearForCalculatorInitialValue}
+                        onChange={calculatorAssumptionsChangeHandler}
+                      />
+                      {/* <p className="text-md pb-4 font-display text-gray-200">
+                        {formatNumber(yearForCalculator)}
+                      </p> */}
+                    </div>
+
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                      <p className="text-md pb-4 font-display text-gray-500">
+                        Data Credits spend (last 30 days)
+                      </p>
+                      <input
+                        id={`dc-monthly-spend-input`}
+                        type="text"
+                        step="1"
+                        pattern="[0-9]*"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        value={monthlyDataSpendInDataCreditsInput}
+                        placeholder={monthlyDataSpendInDataCredits}
+                        onChange={calculatorAssumptionsChangeHandler}
+                      />
+                      <label className="py-4 pl-1 w-24 text-right text-xs font-body text-gray-600 leading-tight">
+                        DC
+                      </label>
+                      {/* <p className="text-gray-200">
+                          {formatNumber(monthlyDataSpendInDataCredits)}
+                        </p> */}
+                    </div>
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                      <p className="text-md pb-4 font-display text-gray-500">
+                        Active hotspots
+                      </p>
+                      <input
+                        id={`number-of-hotspots-input`}
+                        type="text"
+                        step="1"
+                        pattern="[0-9]*"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        value={activeHotspotsInput}
+                        placeholder={numberOfActiveHotspots}
+                        onChange={calculatorAssumptionsChangeHandler}
+                      />
+                      <p className="text-gray-200">
+                        {formatNumber(numberOfActiveHotspots)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                      <p className="text-md pb-4 font-display text-gray-500">
+                        USD price of HNT
+                      </p>
+
+                      <input
+                        id={`usd-hnt-rate-input`}
+                        type="text"
+                        step="1"
+                        pattern="[0-9]*"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        value={usdHntInput}
+                        placeholder={hntUsdExchangeRate}
+                        onChange={calculatorAssumptionsChangeHandler}
+                      />
+                      {/* <p className="text-gray-200">
+                        {formatNumber(hntUsdExchangeRate, "USD", 2)}
+                      </p> */}
+                    </div>
+                    <div></div>
                   </div>
                 </div>
 

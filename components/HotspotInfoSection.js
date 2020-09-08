@@ -10,7 +10,7 @@ const HotspotInfoSection = (props) => {
         </p>
         <p className="text-sm font-display text-gray-600 text-right">
           ({props.rewardName === "Data Transfer" ? "Up to " : ""}
-          {formatNumber(props.rewardPercent, "%")})
+          {formatNumber(props.rewardPercent, "%", 2)})
         </p>
         <p className="text-sm font-display text-hpblue-100 text-right">
           {formatNumber(props.rewardTotal * props.rewardPercent, "HNT", 0)}
