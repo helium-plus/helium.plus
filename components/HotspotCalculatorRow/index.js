@@ -47,7 +47,7 @@ const HotspotCalculatorRow = (props) => {
   return (
     <>
       <div className="flex flex-row">
-        <div className="bg-black p-3 rounded-b-lg ml-6 flex flex-row items-center">
+        <div className="bg-black p-3 rounded-b-lg ml-4 lg:ml-6 flex flex-row items-center">
           <p className="font-display text-hpgreen-100">{props.name}</p>
 
           {!props.firstRow && (
@@ -74,7 +74,7 @@ const HotspotCalculatorRow = (props) => {
         </div>
       </div>
 
-      <div className="px-8 pb-10 pt-2">
+      <div className="px-4 lg:px-8 pb-10 pt-2">
         <Prose className="font-body">
           How many hotspots are currently active near the location where you're
           planning on putting this hotspot?

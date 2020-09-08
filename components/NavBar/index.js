@@ -23,7 +23,6 @@ const NavBarLink = styled.a`
   padding: 10px 16px;
   height: 40px;
   border-radius: 10px;
-  margin-right: ${(props) => (!props.cta ? "40px" : "0")};
 `;
 
 const NavBarWrapperDiv = styled.nav`
@@ -47,7 +46,7 @@ const NavBar = () => {
             <div>
               <Link href="/earnings-calculator">
                 <NavBarLink
-                  className="focus:outline-none focus:border-none"
+                  className="focus:outline-none focus:border-none font-display font-lg pr-3"
                   href="earnings-calculator"
                 >
                   Calculator
@@ -55,7 +54,7 @@ const NavBar = () => {
               </Link>
               <Link href="/about">
                 <NavBarLink
-                  className="focus:outline-none focus:border-none"
+                  className="focus:outline-none focus:border-none font-display font-lg pr-0"
                   href="about"
                 >
                   About

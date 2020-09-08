@@ -92,7 +92,7 @@ const Button = (props) => {
 
   return (
     <button
-      className={`focus:outline-none font-display text-${
+      className={`focus:outline-none font-body text-${
         props.buttonForegroundColor
       } px-4 py-1 mr-4 h-10 bg-${
         props.buttonBackgroundColor

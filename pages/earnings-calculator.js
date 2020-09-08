@@ -8,24 +8,11 @@ import Link from "next/link";
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
-import CurrencyFormat from "react-currency-format";
+import { formatNumber } from "../lib/NumberFormatting";
 
 import HotspotCalculatorRow from "../components/HotspotCalculatorRow";
+import HotspotInfoSection from "../components/HotspotInfoSection";
 import Button from "../components/core/Button";
-
-const hpGreen = `#42DE9F`;
-const hpBlue = `#42D1E4`;
-const hpLightGrey = `#CCC`;
-const hpWhite = `#FFF`;
-
-const Prose = styled.p`
-  font-family: Open Sans;
-  font-weight: 400;
-  color: ${hpLightGrey};
-  margin: 1.25em 0;
-  font-size: 1em;
-  line-height: 1.75em;
-`;
 
 const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const [earningsPerDay, setEarningsPerDay] = useState(5);
@@ -175,81 +162,173 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     setEditingValues(true);
   };
 
-  const EditButton = styled.button`
-    height: 40px;
-    background-color: #42de9f;
-    border-radius: 5px;
-    margin: 5px;
-    padding: 5px;
-    min-width: 150px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    font-family: Open Sans;
-    font-weight: 400;
-    font-size: 1em;
-    line-height: 1.75em;
-    color: #000;
-  `;
-
-  const SecondaryButton = styled.button`
-    height: 40px;
-    background-color: #1e2b37;
-    color: white;
-    border-radius: 5px;
-    margin: 5px;
-    padding: 5px 15px;
-    font-family: Open Sans;
-    font-weight: 400;
-    font-size: 1em;
-    line-height: 1.75em;
-    color: #969696;
-  `;
-
-  const ShowMathButton = styled.button`
-    color: #ccc;
-    background-color: #1a2733;
-    border-radius: 3px;
-  `;
-
   const monthlyRewards = chainVars.data.monthly_reward;
+  const monthlyRewardsInHnt = monthlyRewards / 100000000;
   const dcPercent = chainVars.data.dc_percent;
   const witnessPercent = chainVars.data.poc_witnesses_percent;
   const challengerPercent = chainVars.data.poc_challengers_percent;
   const challengeePercent = chainVars.data.poc_challengees_percent;
   const consensusPercent = chainVars.data.consensus_percent;
 
-  const monthlyRewardsInRealNumbers = monthlyRewards / 100000000;
+  const initialChallengerParticipationPercent = 99;
+  const [
+    challengerParticipationPercent,
+    setChallengerParticipationPercent,
+  ] = useState(initialChallengerParticipationPercent);
+  const [
+    challengerParticipationInputEmpty,
+    setChallengerParticipationInputEmpty,
+  ] = useState(false);
+
+  const initialChallengeeParticipationPercent = 75;
+  const [
+    challengeeParticipationPercent,
+    setChallengeeParticipationPercent,
+  ] = useState(initialChallengeeParticipationPercent);
+  const [
+    challengeeParticipationInputEmpty,
+    setChallengeeParticipationInputEmpty,
+  ] = useState(false);
+
+  const initialWitnessParticipationPercent = 75;
+  const [
+    witnessParticipationPercent,
+    setWitnessParticipationPercent,
+  ] = useState(initialWitnessParticipationPercent);
+  const [
+    witnessParticipationInputEmpty,
+    setWitnessParticipationInputEmpty,
+  ] = useState(false);
+
+  const initialConsensusParticipationPercent = 80;
+  const [
+    consensusParticipationPercent,
+    setConsensusParticipationPercent,
+  ] = useState(initialConsensusParticipationPercent);
+  const [
+    consensusParticipationInputEmpty,
+    setConsensusParticipationInputEmpty,
+  ] = useState(false);
+
+  const initialDcParticipationPercent = 40;
+  const [dcParticipationPercent, setDcParticipationPercent] = useState(
+    initialDcParticipationPercent
+  );
+  const [dcParticipationInputEmpty, setDcParticipationInputEmpty] = useState(
+    false
+  );
 
   const numberOfActiveHotspots = stats.data.counts.hotspots;
-  console.log(stats.data.counts);
-  // const dcTransferredLastMonth = stats.data.counts.hotspots;
+
+  const monthlyDataSpendInDataCredits =
+    stats.data.state_channel_counts.last_month.num_dcs;
+  const monthlyDataSpendInUsd = monthlyDataSpendInDataCredits * 0.00001;
+  console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
+  const monthlyDataSpendInHnt =
+    monthlyDataSpendInUsd / (priceData.data.price / 100000000);
+
+  console.log(`Spend per month in HNT: ${monthlyDataSpendInHnt} HNT`);
+
+  // the amount (in HNT) that will be redistributed if not utilized
+  // from HIP10
+  const monthlyDataUsagePercent =
+    monthlyDataSpendInHnt / (dcPercent * monthlyRewardsInHnt);
+
+  const monthlyUnusedDataRewardsSurplusInHnt =
+    dcPercent * monthlyRewardsInHnt * (1 - monthlyDataUsagePercent);
+
+  console.log(`Used: ${monthlyDataUsagePercent * 100}%`);
+  console.log(`Surplus: ${monthlyUnusedDataRewardsSurplusInHnt} HNT`);
+
+  const surplusRewardTypesCombinedPercentages =
+    challengerPercent + challengeePercent + witnessPercent;
+
+  const challengerSurplusInHnt =
+    monthlyUnusedDataRewardsSurplusInHnt *
+    (challengerPercent / surplusRewardTypesCombinedPercentages);
+
+  const challengeeSurplusInHnt =
+    monthlyUnusedDataRewardsSurplusInHnt *
+    (challengeePercent / surplusRewardTypesCombinedPercentages);
+
+  const witnessSurplusInHnt =
+    monthlyUnusedDataRewardsSurplusInHnt *
+    (witnessPercent / surplusRewardTypesCombinedPercentages);
 
   let totalEarnings = 0;
 
-  const [rewardsShowingState, setRewardsShowingState] = useState({
-    challenger: {
-      totalAvailable: false,
-      likelyPerEpoch: false,
-    },
-    challengee: {
-      totalAvailable: false,
-      likelyPerEpoch: false,
-    },
-    witness: {
-      totalAvailable: false,
-      likelyPerEpoch: false,
-    },
-    consensus: {
-      totalAvailable: false,
-      likelyPerEpoch: false,
-    },
-    data: {
-      totalAvailable: false,
-      likelyPerEpoch: false,
-    },
-  });
+  const participationChangeHandler = (e) => {
+    if (e.target.id === "challenger-input") {
+      if (
+        e.target.value !== undefined &&
+        e.target.value !== "" &&
+        e.target.value > 0 &&
+        e.target.value <= 100
+      ) {
+        setChallengerParticipationPercent(e.target.value);
+        setChallengerParticipationInputEmpty(false);
+      } else {
+        setChallengerParticipationInputEmpty(true);
+        setChallengerParticipationPercent(
+          initialChallengerParticipationPercent
+        );
+      }
+    } else if (e.target.id === "challengee-input") {
+      if (
+        e.target.value !== undefined &&
+        e.target.value !== "" &&
+        e.target.value > 0 &&
+        e.target.value <= 100
+      ) {
+        setChallengeeParticipationPercent(e.target.value);
+        setChallengeeParticipationInputEmpty(false);
+      } else {
+        setChallengeeParticipationInputEmpty(true);
+        setChallengeeParticipationPercent(
+          initialChallengeeParticipationPercent
+        );
+      }
+    } else if (e.target.id === "witness-input") {
+      if (
+        e.target.value !== undefined &&
+        e.target.value !== "" &&
+        e.target.value > 0 &&
+        e.target.value <= 100
+      ) {
+        setWitnessParticipationPercent(e.target.value);
+        setWitnessParticipationInputEmpty(false);
+      } else {
+        setWitnessParticipationInputEmpty(true);
+        setWitnessParticipationPercent(initialWitnessParticipationPercent);
+      }
+    } else if (e.target.id === "consensus-input") {
+      if (
+        e.target.value !== undefined &&
+        e.target.value !== "" &&
+        e.target.value > 0 &&
+        e.target.value <= 100
+      ) {
+        setConsensusParticipationPercent(e.target.value);
+        setConsensusParticipationInputEmpty(false);
+      } else {
+        setConsensusParticipationInputEmpty(true);
+        setConsensusParticipationPercent(initialConsensusParticipationPercent);
+      }
+    } else if (e.target.id === "data transfer-input") {
+      if (
+        e.target.value !== undefined &&
+        e.target.value !== "" &&
+        e.target.value > 0 &&
+        e.target.value <= 100
+      ) {
+        setDcParticipationPercent(e.target.value);
+        setDcParticipationInputEmpty(false);
+      } else {
+        setDcParticipationInputEmpty(true);
+        setDcParticipationPercent(initialDcParticipationPercent);
+      }
+    }
+  };
 
   return (
     <>
@@ -281,8 +360,8 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
             </p>
           </div>
         </section>
-        <section className="bg-gray-200 w-full flex items-center lg:items-start justify-end flex-col pb-64">
-          <div className="max-w-xl w-full lg:max-w-5xl mx-auto px-4 lg:px-12 lg:-mt-24 mt-10">
+        <section className="bg-gray-400 w-full flex items-center lg:items-start justify-end flex-col pb-64">
+          <div className="max-w-xl w-full lg:max-w-5xl mx-auto px-px lg:px-12 lg:-mt-24 mt-6">
             {editingValues ? (
               <div className="bg-hpblue-800 w-full rounded-xl">
                 {hotspots.map((hotspot) => {
@@ -302,7 +381,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                   );
                 })}
-                <div className="px-8 py-5 bg-hpblue-1000 rounded-b-xl">
+                <div className="px-4 lg:px-8 py-5 bg-hpblue-1000 rounded-b-xl">
                   {warningMessage !== "" && (
                     <p className="text-hpgreen-100 font-body font-bold pb-4">
                       {warningMessage}
@@ -333,37 +412,48 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                   let loneWolfness = hotspot.hotspotDensitySelection;
 
                   let challengerRewards =
-                    (monthlyRewardsInRealNumbers * challengerPercent) /
-                    numberOfActiveHotspots;
-
-                  hotspotEarnings += challengerRewards;
+                    (monthlyRewardsInHnt * challengerPercent) /
+                    (numberOfActiveHotspots *
+                      (challengerParticipationPercent / 100));
 
                   let challengeeRewards =
-                    (monthlyRewardsInRealNumbers * challengeePercent) /
-                    (numberOfActiveHotspots * 0.65);
+                    loneWolfness === 1
+                      ? 0
+                      : (monthlyRewardsInHnt * challengeePercent) /
+                        (numberOfActiveHotspots *
+                          (challengeeParticipationPercent / 100));
 
                   let witnessRewards =
-                    (monthlyRewardsInRealNumbers * witnessPercent) /
-                    (numberOfActiveHotspots * 0.65);
+                    loneWolfness === 1
+                      ? 0
+                      : (monthlyRewardsInHnt * witnessPercent) /
+                        (numberOfActiveHotspots *
+                          (witnessParticipationPercent / 100));
 
                   let consensusRewards =
-                    monthlyRewardsInRealNumbers *
-                    consensusPercent *
-                    (1 / numberOfActiveHotspots);
+                    loneWolfness === 1
+                      ? 0
+                      : monthlyRewardsInHnt *
+                        consensusPercent *
+                        (1 /
+                          (numberOfActiveHotspots *
+                            (consensusParticipationPercent / 100)));
 
                   let dataRewards =
-                    (monthlyRewardsInRealNumbers * dcPercent) /
-                    (numberOfActiveHotspots * 0.4);
+                    (monthlyRewardsInHnt * dcPercent -
+                      monthlyUnusedDataRewardsSurplusInHnt) /
+                    (numberOfActiveHotspots * (dcParticipationPercent / 100));
 
-                  if (loneWolfness > 1) {
-                    hotspotEarnings += challengeeRewards;
-                    hotspotEarnings += witnessRewards;
+                  // if (loneWolfness > 1) {
+                  hotspotEarnings += challengerRewards;
+                  hotspotEarnings += challengeeRewards;
+                  hotspotEarnings += witnessRewards;
 
-                    if (loneWolfness > 2) {
-                      hotspotEarnings += consensusRewards;
-                      hotspotEarnings += dataRewards;
-                    }
-                  }
+                  // if (loneWolfness > 2) {
+                  hotspotEarnings += consensusRewards;
+                  hotspotEarnings += dataRewards;
+                  // }
+                  // }
 
                   totalEarnings += hotspotEarnings;
 
@@ -371,31 +461,176 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     <>
                       <div>
                         <div className="flex flex-row">
-                          <div className="bg-black p-3 rounded-b-lg ml-6 flex flex-row items-center">
+                          <div className="bg-black p-3 rounded-b-lg ml-4 lg:ml-6 flex flex-row items-center">
                             <p className="font-display text-hpgreen-100">
                               Hotspot {hotspot.number}
                             </p>
                           </div>
                         </div>
 
-                        {/* Container */}
-                        <div className="px-8 pb-10 pt-10">
-                          <p className="text-white text-xl">
-                            Challenger rewards
+                        {/* Challenger rewards */}
+                        <div className="px-4 lg:px-8 pt-10 flex flex-row justify-between">
+                          <div className="flex-shrink w-full">
+                            <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
+                              Challenger rewards
+                            </p>
+                            <p className="text-gray-600 text-md font-body">
+                              {formatNumber(challengerPercent, "%")} of the{" "}
+                              {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
+                              minted every month, divided between{" "}
+                              {formatNumber(
+                                numberOfActiveHotspots *
+                                  (challengerParticipationPercent / 100),
+                                "int",
+                                0
+                              )}{" "}
+                              hotspots.
+                            </p>
+                          </div>
+                          <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
+                            {formatNumber(challengerRewards, "HNT", 2)}
                           </p>
                         </div>
+
+                        {/* Challengee rewards */}
+                        <div className="px-4 lg:px-8 pt-10 flex flex-row justify-between">
+                          <div className="flex-shrink w-full">
+                            <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
+                              Challengee rewards
+                            </p>
+                            <p className="text-gray-600 text-md font-body">
+                              {loneWolfness === 1 ? (
+                                <>
+                                  Since your hotspot won't have any others
+                                  nearby, it likely isn't elligible for this
+                                  reward type.
+                                </>
+                              ) : (
+                                <>
+                                  {formatNumber(challengeePercent, "%")} of the{" "}
+                                  {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
+                                  minted every month, divided between{" "}
+                                  {formatNumber(
+                                    numberOfActiveHotspots *
+                                      (challengeeParticipationPercent / 100),
+                                    "int",
+                                    0
+                                  )}{" "}
+                                  hotspots, plus a bonus from redistributed HNT
+                                  from data rewards.
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
+                            {formatNumber(challengeeRewards, "HNT", 2)}
+                          </p>
+                        </div>
+
+                        {/* Witness rewards */}
+                        <div className="px-4 lg:px-8 pt-10 flex flex-row justify-between">
+                          <div className="flex-shrink w-full">
+                            <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
+                              Witness rewards
+                            </p>
+                            <p className="text-gray-600 text-md font-body">
+                              {loneWolfness === 1 ? (
+                                <>
+                                  Since your hotspot won't have any others
+                                  nearby, it likely isn't elligible for this
+                                  reward type.
+                                </>
+                              ) : (
+                                <>
+                                  {formatNumber(witnessPercent, "%")} of the{" "}
+                                  {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
+                                  minted every month, divided between{" "}
+                                  {formatNumber(
+                                    numberOfActiveHotspots *
+                                      (witnessParticipationPercent / 100),
+                                    "int",
+                                    0
+                                  )}{" "}
+                                  hotspots, plus a bonus from redistributed HNT
+                                  from data rewards.
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
+                            {formatNumber(witnessRewards, "HNT", 2)}
+                          </p>
+                        </div>
+
+                        {/* Consensus rewards */}
+                        <div className="px-4 lg:px-8 pt-10 flex flex-row justify-between">
+                          <div className="flex-shrink w-full">
+                            <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
+                              Consensus rewards
+                            </p>
+                            <p className="text-gray-600 text-md font-body">
+                              {loneWolfness < 3 ? (
+                                <>
+                                  Your hotspot likely won't have enough nearby
+                                  hotspots in order to get elected to consensus
+                                  groups.
+                                </>
+                              ) : (
+                                <>
+                                  {formatNumber(consensusPercent, "%")} of the{" "}
+                                  {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
+                                  minted every month, assuming your hotspot has
+                                  an equal chance of being elected as the other{" "}
+                                  {formatNumber(
+                                    numberOfActiveHotspots *
+                                      (consensusParticipationPercent / 100) -
+                                      1,
+                                    "int",
+                                    0
+                                  )}{" "}
+                                  hotspots.
+                                </>
+                              )}
+                            </p>
+                          </div>
+                          <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
+                            {formatNumber(consensusRewards, "HNT", 2)}
+                          </p>
+                        </div>
+
+                        {/* Data transfer rewards */}
+                        <div className="px-4 pb-5 lg:px-8 pt-10 flex flex-row justify-between">
+                          <div className="flex-shrink w-full">
+                            <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
+                              Data transfer rewards
+                            </p>
+                            <p className="text-gray-600 text-md font-body">
+                              {formatNumber(dcPercent, "%")} of the{" "}
+                              {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
+                              minted every month, minus the HNT equivalent of
+                              any Data Credit purchases required to meet the{" "}
+                              {formatNumber(dcPercent, "%")} allocation, and
+                              divided between{" "}
+                              {formatNumber(
+                                numberOfActiveHotspots *
+                                  (dcParticipationPercent / 100),
+                                "int",
+                                0
+                              )}{" "}
+                              hotspots.
+                            </p>
+                          </div>
+                          <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
+                            {formatNumber(dataRewards, "HNT", 2)}
+                          </p>
+                        </div>
+
+                        {/*  */}
                       </div>
                       {hotspots.length > 1 && (
-                        <div className="flex justify-end align-center">
-                          <p
-                            css={css`
-                              color: ${hpLightGrey};
-                              font-size: 36px;
-                              text-align: right;
-                            `}
-                            className="p-5"
-                          >
-                            {hotspotEarnings.toFixed(2)} HNT
+                        <div className="flex justify-end align-center bg-hpblue-900 mb-10">
+                          <p className="text-right font-display text-gray-200 text-4xl p-5">
+                            {formatNumber(hotspotEarnings, "HNT", 2)}
                           </p>
                         </div>
                       )}
@@ -412,31 +647,116 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     </>
                   );
                 })}
-                <div
-                  css={css`
-                    background-color: #334a60;
-                    height: 1px;
-                    width: 30%;
-                    margin-left: auto;
-                    margin-right: 15px;
-                  `}
-                />
-                <div className="flex flex-col justify-end align-center">
-                  <p className="text-hpgreen-100 text-4xl text-right p-5">
-                    {totalEarnings.toFixed(2)} HNT
-                  </p>
-                  <p
-                    css={css`
-                      color: #777;
-                      font-size: 12px;
-                      text-align: right;
-                    `}
-                    className="pr-5 pb-5"
-                  >
-                    per month
-                  </p>
+                <div className="px-2 lg:px-4">
+                  <div className="bg-hpblue-600 h-px w-full" />
                 </div>
-                <div className="px-8 py-5 bg-hpblue-1000 rounded-b-xl">
+                <div className="flex flex-col lg:flex-col justify-end align-end bg-hpgreen-100 p-5">
+                  <p className="text-gray-900 font-display text-xl text-right lg:pr-0">
+                    {hotspots.length > 1 ? "These hotspots" : "This hotspot"}{" "}
+                    will likely earn around
+                  </p>
+                  <div className="flex flex-col">
+                    <p className="text-black leading-tight font-bold font-display text-4xl text-right">
+                      {formatNumber(totalEarnings, "HNT", 2)}
+                    </p>
+                    <p className="font-display text-xl text-gray-900 text-right">
+                      in total per month.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-hpblue-700 px-4 lg:px-8 py-8">
+                  <div className="pb-6">
+                    <p className="text-xl pb-5 font-display text-gray-300">
+                      Calculator inputs:
+                    </p>
+                    <p className="text-md pb-4 font-display text-gray-500">
+                      HNT minted per month:{" "}
+                      <span className="text-gray-200">
+                        {formatNumber(monthlyRewardsInHnt)}
+                      </span>
+                    </p>
+                    <p className="text-md pb-4 font-display text-gray-500">
+                      Data Credits spend (last 30 days):{" "}
+                      <span className="text-gray-200">
+                        {formatNumber(monthlyDataSpendInDataCredits)}
+                      </span>
+                    </p>
+                    <p className="text-md pb-4 font-display text-gray-500">
+                      Active hotspots:{" "}
+                      <span className="text-gray-200">
+                        {formatNumber(numberOfActiveHotspots)}
+                      </span>
+                    </p>
+                    <p className="text-md pb-4 font-display text-gray-500">
+                      Current USD price of HNT:{" "}
+                      <span className="text-gray-200">
+                        {formatNumber(hntUsdExchangeRate, "USD", 2)}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="pb-6">
+                    <p className="text-xl pb-1 font-display text-gray-300">
+                      Current HNT rewards distribution:
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
+                    <HotspotInfoSection
+                      rewardName="Challenger"
+                      rewardPercent={challengerPercent}
+                      participationValue={challengerParticipationPercent}
+                      participationInputEmptyBoolean={
+                        challengerParticipationInputEmpty
+                      }
+                      surplus={challengerSurplusInHnt}
+                      rewardTotal={monthlyRewardsInHnt}
+                      participationChangeHandler={participationChangeHandler}
+                    />
+                    <HotspotInfoSection
+                      rewardName="Challengee"
+                      rewardPercent={challengeePercent}
+                      participationValue={challengeeParticipationPercent}
+                      participationInputEmptyBoolean={
+                        challengeeParticipationInputEmpty
+                      }
+                      surplus={challengeeSurplusInHnt}
+                      rewardTotal={monthlyRewardsInHnt}
+                      participationChangeHandler={participationChangeHandler}
+                    />
+                    <HotspotInfoSection
+                      rewardName="Witness"
+                      rewardPercent={witnessPercent}
+                      participationValue={witnessParticipationPercent}
+                      participationInputEmptyBoolean={
+                        witnessParticipationInputEmpty
+                      }
+                      surplus={witnessSurplusInHnt}
+                      rewardTotal={monthlyRewardsInHnt}
+                      participationChangeHandler={participationChangeHandler}
+                    />
+                    <HotspotInfoSection
+                      rewardName="Consensus"
+                      rewardPercent={consensusPercent}
+                      participationValue={consensusParticipationPercent}
+                      participationInputEmptyBoolean={
+                        consensusParticipationInputEmpty
+                      }
+                      rewardTotal={monthlyRewardsInHnt}
+                      participationChangeHandler={participationChangeHandler}
+                    />
+                    <HotspotInfoSection
+                      rewardName="Data Transfer"
+                      rewardPercent={dcPercent}
+                      participationValue={dcParticipationPercent}
+                      participationInputEmptyBoolean={dcParticipationInputEmpty}
+                      rewardTotal={monthlyRewardsInHnt}
+                      dcUsage={monthlyUnusedDataRewardsSurplusInHnt}
+                      participationChangeHandler={participationChangeHandler}
+                    />
+                  </div>
+                </div>
+
+                <div className="px-4 lg:px-8 py-5 bg-hpblue-1000 rounded-b-xl">
                   {warningMessage !== "" && (
                     <p className="text-hpgreen-100 font-body font-bold pb-4">
                       {warningMessage}
@@ -447,7 +767,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                       buttonForegroundColor="black"
                       buttonBackgroundColor="hpgreen-100"
                       onClick={flipBetweenEditingAndCalculating}
-                      buttonText="Edit values"
+                      buttonText="Edit hotspots"
                       buttonIcon="back"
                     />
                     <Button

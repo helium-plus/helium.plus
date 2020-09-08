@@ -15,12 +15,8 @@ const hpLightGrey = `#CCC`;
 const hpWhite = `#FFF`;
 
 const Prose = styled.p`
-  font-family: Open Sans;
-  font-weight: 400;
   color: ${hpLightGrey};
   margin: 1.25em 0;
-  font-size: 1em;
-  line-height: 1.75em;
 `;
 
 const EarningsCalculator = ({ priceData }) => {
@@ -101,7 +97,6 @@ const EarningsCalculator = ({ priceData }) => {
               font-size: 2.25em;
               margin-bottom: 0.8888889em;
               line-height: 1.1111111;
-              font-family: Sora;
               font-weight: 600 !important;
               color: ${hpWhite} !important;
 
@@ -111,7 +106,7 @@ const EarningsCalculator = ({ priceData }) => {
                 padding-top: 2rem;
               }
             `}
-            className=""
+            className="font-display"
           >
             Helium Hotspot Earnings Calculator
           </h1>
@@ -125,7 +120,7 @@ const EarningsCalculator = ({ priceData }) => {
             autoFocus
             onChange={handleNumberOfHotspotsChange}
             value={numberOfHotspotsInputIsEmpty ? "" : numberOfHotspots}
-            className={`mr-4`}
+            className={`mr-4 font-body`}
             css={css`
               border-radius: 8px;
               max-width: 250px;
@@ -133,7 +128,6 @@ const EarningsCalculator = ({ priceData }) => {
               border: 2px solid transparent;
               height: 45px;
               padding: 1rem;
-              font-family: Sora;
               outline: none;
 
               &:focus {
@@ -148,6 +142,7 @@ const EarningsCalculator = ({ priceData }) => {
             value={earningsPerDayInputIsEmpty ? "" : earningsPerDay}
             onChange={handleEarningsPerDayChange}
             step="1"
+            className="font-body"
             css={css`
               border-radius: 8px;
               max-width: 250px;
@@ -156,7 +151,6 @@ const EarningsCalculator = ({ priceData }) => {
               border: 2px solid transparent;
               height: 45px;
               padding: 1rem;
-              font-family: Sora;
               outline: none;
 
               &:focus {
@@ -165,7 +159,7 @@ const EarningsCalculator = ({ priceData }) => {
             `}
           />
 
-          <Prose>
+          <Prose className="font-display">
             With {numberOfHotspots} hotspot
             {numberOfHotspots === 1 ? "" : "s"}
             {numberOfHotspots === 1 ? "" : ", each one"} earning roughly{" "}
@@ -179,9 +173,9 @@ const EarningsCalculator = ({ priceData }) => {
               decimalScale={0}
               renderText={(value) => (
                 <span
+                  className="font-display"
                   css={css`
                     color: ${hpBlue};
-                    font-family: Sora;
                     font-weight: 400;
                     background-color: #000;
                     margin: 2px;
@@ -195,7 +189,7 @@ const EarningsCalculator = ({ priceData }) => {
             />{" "}
             HNT per year.{" "}
           </Prose>
-          <Prose>
+          <Prose className="font-display">
             That's{" "}
             <CurrencyFormat
               value={totalEstimateInUsd}
@@ -206,6 +200,7 @@ const EarningsCalculator = ({ priceData }) => {
               prefix={"$"}
               renderText={(value) => (
                 <span
+                  className="font-display"
                   css={css`
                     color: ${hpGreen};
                     font-family: Sora;

@@ -85,7 +85,7 @@ const ChainVars = ({ chainVars, stats }) => {
             </h2>
             <div className="pb-10">
               <input
-                className="p-2 w-1/4"
+                className="p-2 w-full lg:w-1/4"
                 placeholder="Filter (not functional yet)"
               />
             </div>

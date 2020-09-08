@@ -15,6 +15,9 @@ module.exports = {
       borderRadius: {
         xl: "1rem",
       },
+      fontSize: {
+        "25xl": "14rem",
+      },
       colors: {
         hpgreen: {
           100: "#42de9f",
