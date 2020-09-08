@@ -9,6 +9,7 @@
     },
     {
       "src": "/sec",
+      "status": 301,
       "headers": {
         "Location": "/simple-earnings-calculator"
       }
