@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
 
-          <meta property="og:image" content="https://helium.plus/og2.png" />
+          <meta property="og:image" content="https://helium.plus/og.png" />
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-73259800-4"
