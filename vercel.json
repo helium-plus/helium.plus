@@ -27,6 +27,13 @@
       "headers": {
         "Location": "/hnt-current-price"
       }
+    },
+    {
+      "src": "/vars",
+      "status": 301,
+      "headers": {
+        "Location": "/chain-vars"
+      }
     }
   ]
 }
