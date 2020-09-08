@@ -431,7 +431,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                           (witnessParticipationPercent / 100));
 
                   let consensusRewards =
-                    loneWolfness === 1
+                    loneWolfness < 3
                       ? 0
                       : monthlyRewardsInHnt *
                         consensusPercent *
@@ -444,16 +444,11 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                       monthlyUnusedDataRewardsSurplusInHnt) /
                     (numberOfActiveHotspots * (dcParticipationPercent / 100));
 
-                  // if (loneWolfness > 1) {
                   hotspotEarnings += challengerRewards;
                   hotspotEarnings += challengeeRewards;
                   hotspotEarnings += witnessRewards;
-
-                  // if (loneWolfness > 2) {
                   hotspotEarnings += consensusRewards;
                   hotspotEarnings += dataRewards;
-                  // }
-                  // }
 
                   totalEarnings += hotspotEarnings;
 
