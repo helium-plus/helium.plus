@@ -1,8 +1,5 @@
-const { colors } = require("tailwindcss/defaultTheme");
-
 module.exports = {
-  // purge: [],
-  // important: true,
+  purge: ["./pages/**/*.js", "./lib/**/*.js", "./components/**/*.js"],
   theme: {
     fontFamily: {
       display: ["Sora", "sans-serif"],
@@ -38,9 +35,6 @@ module.exports = {
     },
   },
   variants: {
-    // backgroundColor: ["responsive", "hover", "focus", "active"],
-    // outline: ["responsive", "hover", "focus", "active"],
     animation: ["responsive", "hover"],
   },
-  // plugins: [require("@tailwindcss/typography")],
 };

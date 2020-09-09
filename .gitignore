@@ -8,6 +8,7 @@
 # testing
 /coverage
 /references
+/public/other-images
 
 # next.js
 /.next/

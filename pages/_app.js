@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import React, { useState } from "react";
 
 const BraveLogo = styled.div`
-  background-image: url("/brave_lion.svg");
+  background-image: url("/images/brave_lion.svg");
   background-size: contain;
   background-repeat: no-repeat;
 

@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import NavBar from "../components/NavBar";
+import NavBar from "../components/core/NavBar";
 import { formatNumber } from "../lib/NumberFormatting";
 
 /** @jsx jsx */

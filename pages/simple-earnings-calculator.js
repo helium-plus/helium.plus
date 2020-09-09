@@ -7,7 +7,7 @@ import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
 import CurrencyFormat from "react-currency-format";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/core/NavBar";
 
 const hpGreen = `#42DE9F`;
 const hpBlue = `#42D1E4`;

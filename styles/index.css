@@ -31,6 +31,9 @@ body {
   background: #42de9f;
 }
 
+/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
+/* purgecss end ignore */
+
 @tailwind utilities;
