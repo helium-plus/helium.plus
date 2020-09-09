@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import NavBar from "../components/NavBar";
+import NavBar from "../components/core/NavBar";
 import Head from "next/head";
 import Link from "next/link";
 

@@ -1,4 +1,4 @@
-import NavBar from "../components/NavBar";
+import NavBar from "../components/core/NavBar";
 import Head from "next/head";
 
 const ChainVars = ({ chainVars }) => {

@@ -18,9 +18,9 @@ const HotspotInfoSection = (props) => {
         {(props.rewardName === "Data Transfer" && props.dcUsage !== 0) ||
         (props.surplus !== 0 && props.surplus !== undefined) ? (
           <p
-            className={`text-sm font-display text-${
-              props.surplus ? "green" : "red"
-            }-300 text-right`}
+            className={`text-sm font-display ${
+              props.surplus ? "text-green-300" : "text-red-300"
+            } text-right`}
           >
             {props.surplus ? "+" : "-"}
             {props.surplus

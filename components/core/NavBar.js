@@ -39,7 +39,7 @@ const NavBar = () => {
           <div className="flex items-center justify-between w-full">
             <Link href="/">
               <a className="focus:outline-none focus:border-none">
-                <img src="/lockup.png" className="flex w-auto h-6" />
+                <img src="/images/lockup.png" className="flex w-auto h-6" />
               </a>
             </Link>
 

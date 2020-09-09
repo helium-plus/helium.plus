@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-const ToolCard = (props) => {
+const Card = (props) => {
   return (
     <Link href={props.link}>
       <a className="transition duration-300 ease-in-out transform hover:-translate-y-1 p-6 bg-gray-100 focus:border-none hover:bg-white w-full rounded-lg flex">
@@ -24,4 +24,4 @@ const ToolCard = (props) => {
     </Link>
   );
 };
-export default ToolCard;
+export default Card;
