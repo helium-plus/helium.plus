@@ -1,49 +1,7 @@
 import React from "react";
-import { propTypes } from "react-currency-format";
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
-const hpGreen = `#42DE9F`;
-const hpBlue = `#42D1E4`;
-const hpLightGrey = `#CCC`;
-const hpWhite = `#FFF`;
-
-const Prose = styled.p`
-  /* font-family: Open Sans; */
-  font-weight: 400;
-  color: ${hpLightGrey};
-  margin: 1.25em 0;
-  font-size: 1em;
-  line-height: 1.75em;
-`;
-
-const Container = styled.div`
-  /* background-color: #1e2b37;
-  width: 100%;
-  border-radius: 15px; */
-
-  /* display: flex; */
-  /* flex-direction: column; */
-`;
-
-const DensityOptionCardTitle = styled.p`
-  color: white;
-  font-size: 16px;
-`;
-
 const HotspotCalculatorRow = (props) => {
-  const DensityOptionCard = styled.button`
-    /* background-color: #334a60; */
-    /* width: 150px; */
-    /* height: 150px; */
-    /* margin: 16px; */
-    /* border-radius: 5px; */
-    /* :focus {
-      border: 2px solid ${hpGreen};
-      outline: none;
-    } */
-  `;
   return (
     <>
       <div className="flex flex-row">
@@ -75,10 +33,10 @@ const HotspotCalculatorRow = (props) => {
       </div>
 
       <div className="px-4 lg:px-8 pb-10 pt-2">
-        <Prose className="font-body">
+        <p className="font-body text-gray-300 pb-5 pt-4 text-md">
           How many hotspots are currently active near the location where you're
           planning on putting this hotspot?
-        </Prose>
+        </p>
 
         <div className="flex flex-col lg:flex-row justify-start align-start">
           <button
@@ -89,7 +47,7 @@ const HotspotCalculatorRow = (props) => {
             }`}
             onClick={props.density1Handler}
           >
-            <p className="text-base text-white">None</p>
+            <p className="text-base font-display text-white">None</p>
           </button>
           <button
             className={`w-full lg:w-1/3 h-32 lg:h-40 bg-hpblue-600  p-10 rounded-lg mb-4 lg:mr-4 lg-mb-0 focus:border-solid focus:outline-none ${
@@ -99,7 +57,7 @@ const HotspotCalculatorRow = (props) => {
             }`}
             onClick={props.density2Handler}
           >
-            <p className="text-base text-white">A few</p>
+            <p className="text-base font-display text-white">A few</p>
           </button>
           <button
             className={`w-full lg:w-1/3 h-32 lg:h-40 bg-hpblue-600  p-10 rounded-lg mb-4 lg:mr-4 lg-mb-0 focus:border-solid focus:outline-none ${
@@ -109,7 +67,7 @@ const HotspotCalculatorRow = (props) => {
             }`}
             onClick={props.density3Handler}
           >
-            <p className="text-base text-white">Several</p>
+            <p className="text-base font-display text-white">Several</p>
           </button>
         </div>
       </div>

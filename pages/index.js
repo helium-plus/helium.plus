@@ -1,17 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
 import NavBar from "../components/NavBar";
-
-// import styled from "@emotion/styled";
-
-// const ToolCard = styled.a``;
 
 import ToolCard from "../components/ToolCard";
 
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-
-export default function Home() {
+const Home = () => {
   return (
     <>
       <NavBar />
@@ -35,7 +27,7 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className="bg-gray-300 w-full flex items-center lg:items-start justify-end flex-col pb-64">
+        <section className="bg-gray-300 w-full flex items-center lg:items-start justify-end flex-col pb-20">
           <div className="max-w-xl w-full lg:max-w-4xl mx-auto p-4">
             <h2 className="font-display text-black text-3xl font-bold pt-6">
               Tools
@@ -123,21 +115,12 @@ export default function Home() {
                   />
                 </svg>
               </ToolCard>
-
-              {/* <Link href="/simple-earnings-calculator">
-                <ToolCard className="zh-5 bg-hpblue-900 w-1/2 p-6 rounded-lg">
-                  Simple Earnings Calculator
-                </ToolCard>
-              </Link>
-              <Link href="/hnt-current-price">
-                <ToolCard className="zh-5 bg-hpblue-900 w-1/2 p-6 rounded-lg">
-                  HNT Current Price
-                </ToolCard>
-              </Link> */}
             </div>
           </div>
         </section>
       </main>
     </>
   );
-}
+};
+
+export default Home;

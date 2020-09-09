@@ -1,7 +1,4 @@
-import { useState } from "react";
-
 import Head from "next/head";
-import Link from "next/link";
 
 import NavBar from "../components/NavBar";
 import { formatNumber } from "../lib/NumberFormatting";
@@ -9,14 +6,7 @@ import { formatNumber } from "../lib/NumberFormatting";
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
-import CurrencyFormat from "react-currency-format";
-
-function HNTCurrentPrice({ priceData }) {
-  const hpGreen = `#42DE9F`;
-  const hpBlue = `#42D1E4`;
-  const hpLightGrey = `#CCC`;
-  const hpWhite = `#FFF`;
-
+const HNTCurrentPrice = ({ priceData }) => {
   let hntUsdExchangeRate = 1;
 
   if (priceData.data[0].price !== undefined) {
@@ -67,7 +57,7 @@ function HNTCurrentPrice({ priceData }) {
       </main>
     </>
   );
-}
+};
 
 export async function getStaticProps() {
   const res = await fetch(`https://api.helium.io/v1/oracle/prices`);

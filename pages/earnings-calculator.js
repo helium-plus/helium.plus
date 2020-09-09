@@ -1,69 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import NavBar from "../components/NavBar";
 import Head from "next/head";
 import Link from "next/link";
 
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import styled from "@emotion/styled";
-
 import { formatNumber } from "../lib/NumberFormatting";
+import NumberFormat from "react-number-format";
 
 import HotspotCalculatorRow from "../components/HotspotCalculatorRow";
 import HotspotInfoSection from "../components/HotspotInfoSection";
 import Button from "../components/core/Button";
 
 const EarningsCalculator = ({ chainVars, priceData, stats }) => {
-  const [earningsPerDay, setEarningsPerDay] = useState(5);
-  const [earningsPerDayInputIsEmpty, setEarningsPerDayInputIsEmpty] = useState(
-    true
-  );
-
-  const [numberOfHotspots, setNumberOfHotspots] = useState(1);
-  const [
-    numberOfHotspotsInputIsEmpty,
-    setNumberOfHotspotsInputIsEmpty,
-  ] = useState(true);
-
-  const handleNumberOfHotspotsChange = (event) => {
-    const prevNumberOfHotspots = numberOfHotspots;
-
-    if (event.target.value !== undefined && event.target.value !== "") {
-      if (event.target.value % 1 === 0) {
-        setNumberOfHotspots(+event.target.value);
-        setNumberOfHotspotsInputIsEmpty(false);
-      } else {
-        setNumberOfHotspots(+prevNumberOfHotspots);
-        setNumberOfHotspotsInputIsEmpty(false);
-      }
-    } else {
-      setNumberOfHotspots(1);
-      setNumberOfHotspotsInputIsEmpty(true);
-    }
-  };
-  const handleEarningsPerDayChange = (event) => {
-    const prevEarningsPerDay = earningsPerDay;
-
-    if (event.target.value !== undefined && event.target.value !== "") {
-      setEarningsPerDay(+event.target.value);
-      setEarningsPerDayInputIsEmpty(false);
-    } else {
-      setEarningsPerDay(5);
-      setEarningsPerDayInputIsEmpty(true);
-    }
-  };
-
-  let hntUsdExchangeRate = 0.4;
+  let hntUsdExchangeRate = 0.0;
 
   if (priceData.data.price !== undefined) {
     hntUsdExchangeRate = priceData.data.price / 100000000;
   }
 
-  const totalEstimate = earningsPerDay * numberOfHotspots * 365;
-  const totalEstimateInUsd = totalEstimate * hntUsdExchangeRate;
-
-  const [numberOfHotspotRows, setNumberOfHotspotRows] = useState(1);
   const [warningMessage, setWarningMessage] = useState("");
 
   const [hotspots, setHotspots] = useState([
@@ -79,8 +33,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   ]);
 
   const addRow = () => {
-    // setNumberOfHotspotRows(numberOfHotspotRows + 1);
-
     let hotspotsArray = [...hotspots];
 
     hotspotsArray.push({
@@ -96,8 +48,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     setHotspots(hotspotsArray);
   };
 
-  // console.log(hotspots);
-
   const removeRow = (number) => {
     let hotspotsArray = [...hotspots];
 
@@ -109,9 +59,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     });
 
     setHotspots(hotspotsArray);
-
-    // if (numberOfHotspotRows !== 1)
-    //   setNumberOfHotspotRows(numberOfHotspotRows - 1);
   };
 
   const setDensity = (hotspotDensity, hotspotIndex) => {
@@ -121,7 +68,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
       if (index + 1 === hotspotIndex)
         hotspot.hotspotDensitySelection = hotspotDensity;
     });
-
     setHotspots(hotspotsArray);
   };
 
@@ -176,39 +122,50 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
   const monthlyDataSpendInDataCredits =
     stats.data.state_channel_counts.last_month.num_dcs;
-  const monthlyDataSpendInUsd = monthlyDataSpendInDataCredits * 0.00001;
-  // console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
-  const monthlyDataSpendInHnt =
-    monthlyDataSpendInUsd / (priceData.data.price / 100000000);
 
-  // TODO: make based on current date instead of hardcoded
-  const yearForCalculatorInitialValue = 2020;
-  const [
-    yearForCalculatorInputEmpty,
-    setYearForCalculatorInputEmpty,
-  ] = useState(false);
+  const yearForCalculatorInitialValue = new Date().getFullYear();
   const [yearForCalculator, setYearForCalculator] = useState(
     yearForCalculatorInitialValue
   );
 
   const [
-    monthlyDataSpendInDataCreditsInputEmpty,
-    setMonthlyDataSpendInDataCreditsInputEmpty,
-  ] = useState(false);
-  const [
     monthlyDataSpendInDataCreditsInput,
     setMonthlyDataSpendInDataCreditsInput,
   ] = useState(monthlyDataSpendInDataCredits);
 
-  const [activeHotspotsInputEmpty, setActiveHotspotsInputEmpty] = useState(
-    false
-  );
   const [activeHotspotsInput, setActiveHotspotsInput] = useState(
     numberOfActiveHotspots
   );
-
-  const [usdHntInputEmpty, setUsdHntInputEmpty] = useState(false);
   const [usdHntInput, setUsdHntInput] = useState(hntUsdExchangeRate);
+
+  const dataCreditInputOrActual = (dataCredits) => {
+    if (
+      monthlyDataSpendInDataCreditsInput > 0 &&
+      monthlyDataSpendInDataCreditsInput !== monthlyDataSpendInDataCredits
+    ) {
+      return monthlyDataSpendInDataCreditsInput;
+    } else {
+      return dataCredits;
+    }
+  };
+
+  const hotspotsInputOrActual = (hotspots) => {
+    if (
+      activeHotspotsInput > 0 &&
+      activeHotspotsInput !== numberOfActiveHotspots
+    ) {
+      return activeHotspotsInput;
+    } else {
+      return hotspots;
+    }
+  };
+
+  const monthlyDataSpendInUsd =
+    dataCreditInputOrActual(monthlyDataSpendInDataCredits) * 0.00001;
+  // console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
+
+  const monthlyDataSpendInHnt =
+    monthlyDataSpendInUsd / (priceData.data.price / 100000000);
 
   const challengerPercentAnnualChange = -0.0005;
   const challengeePercentAnnualChange = -0.01;
@@ -217,23 +174,29 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const dcPercentAnnualChange = 0.025;
 
   const calculateProjectedPercent = (initialPercent, annualChange) => {
-    if (yearForCalculator <= yearForCalculatorInitialValue) {
+    const userInputtedYear = !isNaN(yearForCalculator)
+      ? Math.floor(yearForCalculator)
+      : yearForCalculator;
+
+    if (
+      isNaN(userInputtedYear) ||
+      userInputtedYear === undefined ||
+      userInputtedYear <= yearForCalculatorInitialValue
+    ) {
       return initialPercent;
     } else {
-      if (yearForCalculator - yearForCalculatorInitialValue >= 20) {
+      if (userInputtedYear - yearForCalculatorInitialValue >= 20) {
         return initialPercent * Math.pow(1 + annualChange, 20);
       } else
         return (
           initialPercent *
           Math.pow(
             1 + annualChange,
-            yearForCalculator - yearForCalculatorInitialValue
+            userInputtedYear - yearForCalculatorInitialValue
           )
         );
     }
   };
-
-  // Editable calculator assumptions
 
   // Editable participation rates
   const initialChallengerParticipationPercent = 99;
@@ -284,18 +247,13 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     false
   );
 
-  // console.log(`Spend per month in HNT: ${monthlyDataSpendInHnt} HNT`);
-
-  // the amount (in HNT) that will be redistributed if not utilized
-  // from HIP10
   const monthlyDataUsagePercent =
     monthlyDataSpendInHnt / (dcPercent * monthlyRewardsInHnt);
 
   const monthlyUnusedDataRewardsSurplusInHnt =
-    dcPercent * monthlyRewardsInHnt * (1 - monthlyDataUsagePercent);
-
-  // console.log(`Used: ${monthlyDataUsagePercent * 100}%`);
-  // console.log(`Surplus: ${monthlyUnusedDataRewardsSurplusInHnt} HNT`);
+    dcPercent * monthlyRewardsInHnt * (1 - monthlyDataUsagePercent) > 0
+      ? dcPercent * monthlyRewardsInHnt * (1 - monthlyDataUsagePercent)
+      : 0;
 
   const surplusRewardTypesCombinedPercentages =
     calculateProjectedPercent(
@@ -404,60 +362,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
     }
   };
 
-  const calculatorAssumptionsChangeHandler = (e) => {
-    if (e.target.id === "dc-monthly-spend-input") {
-      // if (
-      //   e.target.value !== undefined &&
-      //   e.target.value !== "" &&
-      //   e.target.value > 0
-      // ) {
-      setMonthlyDataSpendInDataCreditsInput(e.target.value);
-      setMonthlyDataSpendInDataCreditsInputEmpty(false);
-      // } else {
-      //   setMonthlyDataSpendInDataCreditsInputEmpty(true);
-      //   setMonthlyDataSpendInDataCreditsInput(monthlyDataSpendInDataCredits);
-      // }
-    } else if (e.target.id === "year-for-calculator") {
-      // if (
-      //   e.target.value !== undefined &&
-      //   e.target.value !== "" &&
-      //   e.target.value > 1 &&
-      //   e.target.value < 2121
-      // ) {
-      setYearForCalculator(e.target.value);
-      setYearForCalculatorInputEmpty(false);
-      // } else {
-      //   setYearForCalculatorInputEmpty(true);
-      //   setYearForCalculator(yearForCalculatorInitialValue);
-      // }
-    } else if (e.target.id === "number-of-hotspots-input") {
-      // if (
-      //   e.target.value !== undefined &&
-      //   e.target.value !== "" &&
-      //   e.target.value > 0 &&
-      //   e.target.value < 2121
-      // ) {
-      setActiveHotspotsInput(e.target.value);
-      setActiveHotspotsInputEmpty(false);
-      // } else {
-      //   setActiveHotspotsInputEmpty(true);
-      //   setActiveHotspotsInput(numberOfActiveHotspots);
-      // }
-    } else if (e.target.id === "usd-hnt-rate-input") {
-      // if (
-      //   e.target.value !== undefined &&
-      //   e.target.value !== "" &&
-      //   e.target.value > 0
-      // ) {
-      setUsdHntInput(e.target.value);
-      setUsdHntInputEmpty(false);
-      // } else {
-      //   setUsdHntInputEmpty(true);
-      //   setUsdHntInput(hntUsdExchangeRate);
-      // }
-    }
-  };
-
   return (
     <>
       <NavBar />
@@ -466,8 +370,8 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
-        <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-row w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-40">
+      <main className="flex items-center justify-center flex-col h-full pt-4 lg:pt-20">
+        <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-row w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-64">
           <div className="max-w-2xl w-full flex items-start justify-start flex-col">
             <h1 className="text-5xl max-w-2xl text-white font-display pt-6 lg:pt-12 leading-tight lg:text-6xl text-left font-bold pr-2">
               Helium Hotspot Earnings Calculator
@@ -488,24 +392,20 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
             </p>
           </div>
         </section>
-        <section className="bg-gray-400 w-full flex items-center lg:items-start justify-end flex-col pb-64">
-          <div className="max-w-xl w-full lg:max-w-5xl mx-auto px-px lg:px-12 lg:-mt-24 mt-6">
+        <section className="md:bg-gray-400 flex-auto w-full flex items-center lg:items-start justify-end flex-col pb-20 lg:pb-32">
+          <div className="max-w-xl w-full lg:max-w-5xl mx-auto px-0 lg:px-12 lg:-mt-48 mt-6">
             {editingValues ? (
-              <div className="bg-hpblue-800 w-full rounded-xl">
+              <div className="bg-hpblue-800 shadow-xl w-full rounded-xl">
                 {hotspots.map((hotspot) => {
                   return (
                     <HotspotCalculatorRow
                       name={hotspot.name}
-                      // addRowHandler={addRow}
                       removeRowHandler={() => removeRow(hotspot.number)}
                       firstRow={hotspot.number === 1}
-                      // lastRow={hotspot.number === hotspots.length}
                       density1Handler={() => setDensity(1, hotspot.number)}
                       density2Handler={() => setDensity(2, hotspot.number)}
                       density3Handler={() => setDensity(3, hotspot.number)}
                       selectedDensity={hotspot.hotspotDensitySelection}
-                      // calculateFunction={flipBetweenEditingAndCalculating}
-                      // warningMessage={warningMessage}
                     />
                   );
                 })}
@@ -545,7 +445,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                         challengerPercent,
                         challengerPercentAnnualChange
                       )) /
-                    (numberOfActiveHotspots *
+                    (hotspotsInputOrActual(numberOfActiveHotspots) *
                       (challengerParticipationPercent / 100));
 
                   let challengeeRewards =
@@ -556,7 +456,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                             challengeePercent,
                             challengeePercentAnnualChange
                           )) /
-                        (numberOfActiveHotspots *
+                        (hotspotsInputOrActual(numberOfActiveHotspots) *
                           (challengeeParticipationPercent / 100));
 
                   let witnessRewards =
@@ -567,7 +467,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                             witnessPercent,
                             witnessPercentAnnualChange
                           )) /
-                        (numberOfActiveHotspots *
+                        (hotspotsInputOrActual(numberOfActiveHotspots) *
                           (witnessParticipationPercent / 100));
 
                   let consensusRewards =
@@ -579,13 +479,16 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                           consensusPercentAnnualChange
                         ) *
                         (1 /
-                          (numberOfActiveHotspots *
+                          (hotspotsInputOrActual(numberOfActiveHotspots) *
                             (consensusParticipationPercent / 100)));
 
                   let dataRewards =
                     (monthlyRewardsInHnt * dcPercent -
                       monthlyUnusedDataRewardsSurplusInHnt) /
-                    (numberOfActiveHotspots * (dcParticipationPercent / 100));
+                    (hotspotsInputOrActual(numberOfActiveHotspots) *
+                      (dcParticipationPercent / 100));
+
+                  console.log(dataRewards);
 
                   hotspotEarnings += challengerRewards;
                   hotspotEarnings += challengeeRewards;
@@ -607,6 +510,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                         </div>
 
                         {/* Challenger rewards */}
+                        {/* TODO: turn this block into a HotspotRewardsRow component */}
                         <div className="px-4 lg:px-8 pt-10 flex flex-row justify-between">
                           <div className="flex-shrink w-full">
                             <p className="text-white text-xl font-display leading-tight pb-4 max-w-sm">
@@ -625,12 +529,13 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                               minted every month, divided between{" "}
                               {formatNumber(
-                                numberOfActiveHotspots *
+                                hotspotsInputOrActual(numberOfActiveHotspots) *
                                   (challengerParticipationPercent / 100),
                                 "int",
                                 0
                               )}{" "}
-                              hotspots.
+                              hotspots, plus a bonus from redistributed HNT from
+                              data rewards.
                             </p>
                           </div>
                           <p className="text-gray-500 font-display text-3xl leading-tight flex-grow w-full text-right">
@@ -648,7 +553,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               {loneWolfness === 1 ? (
                                 <>
                                   Since your hotspot won't have any others
-                                  nearby, it likely isn't elligible for this
+                                  nearby, it likely isn't eligible for this
                                   reward type.
                                 </>
                               ) : (
@@ -667,7 +572,9 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, divided between{" "}
                                   {formatNumber(
-                                    numberOfActiveHotspots *
+                                    hotspotsInputOrActual(
+                                      numberOfActiveHotspots
+                                    ) *
                                       (challengeeParticipationPercent / 100),
                                     "int",
                                     0
@@ -693,7 +600,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               {loneWolfness === 1 ? (
                                 <>
                                   Since your hotspot won't have any others
-                                  nearby, it likely isn't elligible for this
+                                  nearby, it likely isn't eligible for this
                                   reward type.
                                 </>
                               ) : (
@@ -710,7 +617,9 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, divided between{" "}
                                   {formatNumber(
-                                    numberOfActiveHotspots *
+                                    hotspotsInputOrActual(
+                                      numberOfActiveHotspots
+                                    ) *
                                       (witnessParticipationPercent / 100),
                                     "int",
                                     0
@@ -754,7 +663,9 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                   minted every month, assuming your hotspot has
                                   an equal chance of being elected as the other{" "}
                                   {formatNumber(
-                                    numberOfActiveHotspots *
+                                    hotspotsInputOrActual(
+                                      numberOfActiveHotspots
+                                    ) *
                                       (consensusParticipationPercent / 100) -
                                       1,
                                     "int",
@@ -799,7 +710,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                               )}{" "}
                               allocation, and divided between{" "}
                               {formatNumber(
-                                numberOfActiveHotspots *
+                                hotspotsInputOrActual(numberOfActiveHotspots) *
                                   (dcParticipationPercent / 100),
                                 "int",
                                 0
@@ -821,23 +732,14 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                       )}
 
                       {index + 1 !== hotspots.length && (
-                        <div
-                          css={css`
-                            background-color: #070e15;
-                            height: 1px;
-                            width: 100%;
-                          `}
-                        />
+                        <div className="bg-hpblue-1000 w-full h-px" />
                       )}
                     </>
                   );
                 })}
-                <div className="px-2 lg:px-4">
-                  <div className="bg-hpblue-600 h-px w-full" />
-                </div>
-                <div className="flex flex-col lg:flex-col justify-end align-end bg-hpgreen-100 p-5">
+                <div className="flex flex-col lg:flex-col justify-end align-end bg-hpgreen-100 p-5 mt-10">
                   <p className="text-gray-900 font-display text-xl text-right lg:pr-0">
-                    {hotspots.length > 1 ? "These hotspots" : "This hotspot"}{" "}
+                    {hotspots.length > 1 ? "These hotspots " : "This hotspot "}
                     will likely earn around
                   </p>
                   <div className="flex flex-col justify-end align-end">
@@ -964,81 +866,96 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     />
                   </div>
 
-                  <div className="pb-6 grid grid-cols-2">
-                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                  <div className="pb-2">
+                    <p className="text-md font-display text-gray-500">
+                      Other data that influences calculations:
+                    </p>
+                  </div>
+
+                  <div className="pb-6 grid gap-2 grid-cols-2">
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg col-span-2 lg:col-span-1 bg-hpblue-800 p-5 justify-between">
+                      <p className="text-md pb-4 font-display text-gray-500">
+                        Data Credit spend (30 days)
+                      </p>
+                      <div className="flex flex-col lg:flex-row align-center justify-end">
+                        <NumberFormat
+                          type="text"
+                          step="1"
+                          className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-full lg:w-1/2 placeholder-gray-700"
+                          value={monthlyDataSpendInDataCreditsInput}
+                          placeholder={monthlyDataSpendInDataCredits}
+                          displayType={"input"}
+                          thousandSeparator={true}
+                          onValueChange={(values) => {
+                            // To get the non-formatted value
+                            const { value } = values;
+                            setMonthlyDataSpendInDataCreditsInput(value);
+                          }}
+                        />
+                        <p className="pt-3 lg:py-1z lg:py-1 lg:mt-px px-4 w-full lg:w-1/2 text-md font-body text-center lg:text-left text-gray-600 leading-tight">
+                          {formatNumber(monthlyDataSpendInUsd, "USD", 2)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-5 justify-between">
                       <p className="text-md font-display text-gray-500">Year</p>
-                      <input
+                      <NumberFormat
                         id={`year-for-calculator`}
                         type="text"
                         step="1"
-                        pattern="[0-9]*"
-                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-full lg:w-1/2 placeholder-gray-700"
                         value={yearForCalculator}
+                        decimalScale={0}
+                        fixedDecimalScale={true}
                         placeholder={yearForCalculatorInitialValue}
-                        onChange={calculatorAssumptionsChangeHandler}
+                        onValueChange={(values) => {
+                          // To get the non-formatted value
+                          const { value } = values;
+                          setYearForCalculator(value);
+                        }}
                       />
-                      {/* <p className="text-md pb-4 font-display text-gray-200">
-                        {formatNumber(yearForCalculator)}
-                      </p> */}
                     </div>
 
-                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
-                      <p className="text-md pb-4 font-display text-gray-500">
-                        Data Credits spend (last 30 days)
-                      </p>
-                      <input
-                        id={`dc-monthly-spend-input`}
-                        type="text"
-                        step="1"
-                        pattern="[0-9]*"
-                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
-                        value={monthlyDataSpendInDataCreditsInput}
-                        placeholder={monthlyDataSpendInDataCredits}
-                        onChange={calculatorAssumptionsChangeHandler}
-                      />
-                      <label className="py-4 pl-1 w-24 text-right text-xs font-body text-gray-600 leading-tight">
-                        DC
-                      </label>
-                      {/* <p className="text-gray-200">
-                          {formatNumber(monthlyDataSpendInDataCredits)}
-                        </p> */}
-                    </div>
-                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-5 justify-between">
                       <p className="text-md pb-4 font-display text-gray-500">
                         Active hotspots
                       </p>
-                      <input
+                      <NumberFormat
                         id={`number-of-hotspots-input`}
                         type="text"
                         step="1"
-                        pattern="[0-9]*"
-                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-full lg:w-1/2 placeholder-gray-700"
                         value={activeHotspotsInput}
                         placeholder={numberOfActiveHotspots}
-                        onChange={calculatorAssumptionsChangeHandler}
+                        displayType={"input"}
+                        thousandSeparator={true}
+                        onValueChange={(values) => {
+                          const { value } = values;
+                          setActiveHotspotsInput(value);
+                        }}
                       />
-                      <p className="text-gray-200">
-                        {formatNumber(numberOfActiveHotspots)}
-                      </p>
                     </div>
-                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-2 justify-between">
+                    <div className="flex flex-col border border-hpblue-700 rounded-lg bg-hpblue-800 p-5 justify-between">
                       <p className="text-md pb-4 font-display text-gray-500">
                         USD price of HNT
                       </p>
-
-                      <input
-                        id={`usd-hnt-rate-input`}
+                      <NumberFormat
                         type="text"
                         step="1"
-                        pattern="[0-9]*"
-                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-1/3 placeholder-gray-700"
+                        className="py-4 px-1 text-gray-300 text-center rounded-md bg-gray-900 h-6 w-full lg:w-1/2 placeholder-gray-700"
                         value={usdHntInput}
+                        prefix={"$"}
+                        decimalScale={2}
+                        fixedDecimalScale={true}
                         placeholder={hntUsdExchangeRate}
-                        onChange={calculatorAssumptionsChangeHandler}
+                        displayType={"input"}
+                        thousandSeparator={true}
+                        onValueChange={(values) => {
+                          // To get the non-formatted value
+                          const { value } = values;
+                          setUsdHntInput(value);
+                        }}
                       />
-                      {/* <p className="text-gray-200">
-                        {formatNumber(hntUsdExchangeRate, "USD", 2)}
-                      </p> */}
                     </div>
                     <div></div>
                   </div>

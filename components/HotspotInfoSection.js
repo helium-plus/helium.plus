@@ -15,7 +15,8 @@ const HotspotInfoSection = (props) => {
         <p className="text-sm font-display text-hpblue-100 text-right">
           {formatNumber(props.rewardTotal * props.rewardPercent, "HNT", 0)}
         </p>
-        {(props.rewardName === "Data Transfer" || props.surplus) && (
+        {(props.rewardName === "Data Transfer" && props.dcUsage !== 0) ||
+        (props.surplus !== 0 && props.surplus !== undefined) ? (
           <p
             className={`text-sm font-display text-${
               props.surplus ? "green" : "red"
@@ -26,6 +27,8 @@ const HotspotInfoSection = (props) => {
               ? formatNumber(props.surplus, "HNT", 0)
               : formatNumber(props.dcUsage, "HNT", 0)}
           </p>
+        ) : (
+          <></>
         )}
       </div>
       <div className="flex flex-row items-center justify-end px-2">

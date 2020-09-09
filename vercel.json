@@ -34,6 +34,13 @@
       "headers": {
         "Location": "/chain-vars"
       }
+    },
+    {
+      "src": "/cv",
+      "status": 301,
+      "headers": {
+        "Location": "/chain-vars"
+      }
     }
   ]
 }

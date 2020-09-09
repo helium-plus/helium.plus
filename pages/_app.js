@@ -3,47 +3,7 @@ import styled from "@emotion/styled";
 
 import React, { useState } from "react";
 
-const DownloadBraveBannerWrapper = styled.div`
-  height: 64px;
-  width: 100%;
-  background-color: #1a2531;
-  box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.1);
-  position: fixed;
-  bottom: 0;
-  z-index: 10;
-
-  @media (max-width: 1030px) {
-    /* display: none; */
-    height: auto;
-  }
-`;
-
-const DownloadBraveBannerContentWrapper = styled.div`
-  max-width: 836px;
-  margin-left: auto;
-  margin-right: auto;
-  height: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const DownloadBraveBannerContentContainer = styled.div`
-  width: 100%;
-
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: repeat(2, minmax(min-content, max-content)) auto;
-  grid-gap: 0;
-
-  @media (max-width: 1030px) {
-    grid-template-rows: auto auto;
-    grid-template-columns: auto minmax(min-content, max-content);
-  }
-`;
-
-const DownloadBraveLogo = styled.div`
+const BraveLogo = styled.div`
   background-image: url("/brave_lion.svg");
   background-size: contain;
   background-repeat: no-repeat;
@@ -55,137 +15,6 @@ const DownloadBraveLogo = styled.div`
   justify-self: start;
 
   margin-right: 13.5px;
-
-  @media (max-width: 1030px) {
-    align-self: center;
-    justify-self: end;
-
-    grid-column: 1;
-    grid-row: 1;
-
-    margin: 0 0 0 20px;
-  }
-
-  @media (max-width: 738px) {
-    display: none;
-  }
-`;
-
-const DownloadBraveBannerInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  max-width: 536px;
-
-  @media (max-width: 1030px) {
-    grid-column: 2 / span 1;
-    grid-row: 1 / span 1;
-    margin: 20px;
-
-    align-self: center;
-    justify-self: center;
-  }
-
-  @media (max-width: 738px) {
-    grid-column: 1 / span 3;
-  }
-`;
-
-const DownloadBraveBannerHeader = styled.p`
-  font-display: auto;
-  font-family: "Sora", Arial, Helvetica, sans-serif;
-  font-weight: 900;
-  font-style: normal;
-
-  font-size: 16px;
-  line-height: 20px;
-  color: #fb542b;
-
-  margin: 0 0 3px 0;
-  padding: 0;
-`;
-
-const DownloadBraveBannerBody = styled.p`
-  font-display: auto;
-  font-family: "Sora", Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  font-style: normal;
-
-  font-size: 12px;
-  line-height: 15px;
-  color: #7e7e7e;
-
-  margin: 0;
-  margin: 0;
-`;
-
-const DownloadBraveBannerButtonContainer = styled.div`
-  align-self: center;
-  justify-self: end;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-
-  @media (max-width: 1030px) {
-    align-self: center;
-    justify-self: center;
-
-    grid-column: 1 / span 3;
-
-    margin: 0 20px 20px 20px;
-  }
-`;
-
-const DownloadBraveOkayButton = styled.a`
-  text-decoration: none;
-
-  height: 40px;
-  width: 128px;
-  border-radius: 10px;
-  border: 2px solid #fb542b;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  :hover {
-    background-color: #fb542b;
-  }
-`;
-
-const DownloadBraveOkayText = styled.p`
-  font-display: auto;
-  font-family: "Sora", Arial, Helvetica, sans-serif;
-  font-weight: 800;
-  font-style: normal;
-
-  font-size: 16px;
-  line-height: 20px;
-  color: #fff;
-
-  margin: 0;
-  padding: 0;
-`;
-
-const DownloadBraveNoThanksText = styled.p`
-  font-display: auto;
-  font-family: "Sora", Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-style: normal;
-
-  font-size: 16px;
-  line-height: 20px;
-  color: #939393;
-
-  cursor: pointer;
-
-  margin: 0 0 0 32px;
-  padding: 0;
 `;
 
 function checkIsBrave() {
@@ -204,38 +33,42 @@ function DownloadBanner() {
   const [userHasClickedNoThankYou, setNoThankYou] = useState(false);
 
   return !userHasClickedNoThankYou && !isBrave ? (
-    <DownloadBraveBannerWrapper>
-      <DownloadBraveBannerContentWrapper>
-        <DownloadBraveBannerContentContainer>
-          <DownloadBraveLogo />
-          <DownloadBraveBannerInfoContainer>
-            <DownloadBraveBannerHeader>
-              Like passive income? Get Brave: earn BAT just for browsing
-            </DownloadBraveBannerHeader>
-            <DownloadBraveBannerBody>
-              Up to 8x faster than Chrome • Blocks ads and trackers • Supports
-              Chrome Extensions
-            </DownloadBraveBannerBody>
-          </DownloadBraveBannerInfoContainer>
-          <DownloadBraveBannerButtonContainer>
-            <DownloadBraveOkayButton
+    <div className="hidden lg:block py-2 w-full bg-hpblue-800 shadow-md fixed bottom-0 z-10">
+      <div className="lg:max-w-4xl mx-auto h-full flex justify-center align-center">
+        <div className="w-full flex justify-between align-center">
+          <div className="flex flex-row justify-start align-center">
+            <BraveLogo />
+            <div className="flex flex-col justify-start align-center">
+              <p className="text-braveorange-100 font-display text-md">
+                Like passive income? Get Brave: earn BAT just for browsing
+              </p>
+              <p className="text-xs text-gray-200 leading-tight font-body">
+                Up to 8x faster than Chrome • Blocks ads and trackers • Supports
+                Chrome Extensions
+              </p>
+            </div>
+          </div>
+          <div className="self-end flex flex-row justify-end align-center">
+            <a
+              className="transition duration-200 ease-in-out no-underline flex align-center justify-center px-5 py-2 mr-2 border-2 focus:outline-none focus:shadow-none border-braveorange-100 rounded-lg hover:bg-braveorange-100"
               onClick={() => setNoThankYou(true)}
               target="_blank"
               href="https://brave.com/hel465"
             >
-              <DownloadBraveOkayText>Get Brave</DownloadBraveOkayText>
-            </DownloadBraveOkayButton>
-            <DownloadBraveNoThanksText
+              <p className="font-display h-full w-full text-white">Get Brave</p>
+            </a>
+            <button
+              className="transition duration-200 ease-in-out font-display hover:bg-gray-900 px-5 py-2 rounded-lg text-gray-500 hover:cursor"
               onClick={() => {
                 setNoThankYou(true);
               }}
             >
               No thanks
-            </DownloadBraveNoThanksText>
-          </DownloadBraveBannerButtonContainer>
-        </DownloadBraveBannerContentContainer>
-      </DownloadBraveBannerContentWrapper>
-    </DownloadBraveBannerWrapper>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   ) : null;
 }
 

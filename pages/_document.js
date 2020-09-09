@@ -29,8 +29,18 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Oxygen:wght@200;400;600;800&family=Sora:wght@200;400;600;800&display=swap"
             rel="stylesheet"
           />
-
           <meta property="og:image" content="https://helium.plus/og.png" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="@helium_plus" />
+          <meta name="twitter:creator" content="@dcwj" />
+          <meta property="og:url" content="https://helium.plus" />
+          <meta property="og:title" content="Helium+" />
+          <meta
+            property="og:description"
+            content="Helium is growing rapidly. Helium+ can help you make better sense of how it works, and find your path toward helping it grow even faster."
+          />
+          <meta property="og:image" content="https://helium.plus/og.png" />
+
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-73259800-4"

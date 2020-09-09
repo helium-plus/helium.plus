@@ -1,13 +1,9 @@
-import Link from "next/link";
 import Head from "next/head";
 
 import ToolCard from "../components/ToolCard";
 import NavBar from "../components/NavBar";
 
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-
-export default function NotFoundPage() {
+const NotFoundPage = () => {
   return (
     <>
       <Head>
@@ -111,21 +107,12 @@ export default function NotFoundPage() {
                   />
                 </svg>
               </ToolCard>
-
-              {/* <Link href="/simple-earnings-calculator">
-                <ToolCard className="zh-5 bg-hpblue-900 w-1/2 p-6 rounded-lg">
-                  Simple Earnings Calculator
-                </ToolCard>
-              </Link>
-              <Link href="/hnt-current-price">
-                <ToolCard className="zh-5 bg-hpblue-900 w-1/2 p-6 rounded-lg">
-                  HNT Current Price
-                </ToolCard>
-              </Link> */}
             </div>
           </div>
         </section>
       </main>
     </>
   );
-}
+};
+
+export default NotFoundPage;

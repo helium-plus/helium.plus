@@ -1,47 +1,25 @@
-// import { useState, useEffect } from "react";
-
 import NavBar from "../components/NavBar";
 import Head from "next/head";
-// import Link from "next/link";
 
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import styled from "@emotion/styled";
+const ChainVars = ({ chainVars }) => {
+  const populateDescription = (key) => {
+    // Default description
+    let description = "[Default description]";
 
-// import CurrencyFormat from "react-currency-format";
+    switch (key) {
+      case "min_score":
+        description =
+          "The minimum score for a hotspot to be eligible to get elected to a consensus group.";
+        break;
+      // TODO: add descriptions for the rest of the variables
+      case "var_name":
+        description = "Description.";
+        break;
+    }
 
-// import HotspotCalculatorRow from "../components/HotspotCalculatorRow";
+    return description;
+  };
 
-const hpGreen = `#42DE9F`;
-const hpBlue = `#42D1E4`;
-const hpLightGrey = `#CCC`;
-const hpWhite = `#FFF`;
-
-const Prose = styled.p`
-  font-family: Open Sans;
-  font-weight: 400;
-  color: ${(props) => (props.primary ? hpGreen : hpLightGrey)};
-  font-size: 1em;
-  line-height: 1.75em;
-  hyphens: auto;
-  overflow-wrap: break-word;
-`;
-
-const populateDescription = (key) => {
-  // Default description
-  let description = "[Default description]";
-
-  switch (key) {
-    case "min_score":
-      description =
-        "The minimum score for a hotspot to be elligible to get elected to a consensus group.";
-      break;
-  }
-
-  return description;
-};
-
-const ChainVars = ({ chainVars, stats }) => {
   const copyText = (key) => {
     const el = document.createElement("textarea");
     el.value = chainVars.data[key];
