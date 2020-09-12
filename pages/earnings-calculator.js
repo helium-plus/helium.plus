@@ -123,7 +123,8 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   const monthlyDataSpendInDataCredits =
     stats.data.state_channel_counts.last_month.num_dcs;
 
-  const yearForCalculatorInitialValue = new Date().getFullYear();
+  const yearForCalculatorInitialValue = 2020;
+  const yearForCalculatorActualValue = new Date().getFullYear();
   const [yearForCalculator, setYearForCalculator] = useState(
     yearForCalculatorInitialValue
   );
@@ -162,7 +163,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
   const monthlyDataSpendInUsd =
     dataCreditInputOrActual(monthlyDataSpendInDataCredits) * 0.00001;
-  // console.log(`Spend per month in USD: $${monthlyDataSpendInUsd}`);
 
   const monthlyDataSpendInHnt =
     monthlyDataSpendInUsd / (priceData.data.price / 100000000);
@@ -183,11 +183,16 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
       userInputtedYear === undefined ||
       userInputtedYear <= yearForCalculatorInitialValue
     ) {
+      // The inputted year is not a valid number, or it's < 2020, so use the distribution from 2020
       return initialPercent;
     } else {
+      // The inputted year is a valid number, and it's > 2020
       if (userInputtedYear - yearForCalculatorInitialValue >= 20) {
+        // The inputted year is a valid number, and it's > 2040
         return initialPercent * Math.pow(1 + annualChange, 20);
-      } else
+      }
+      // The inputted year is a valid number, and it's between 2020 and 2040
+      else
         return (
           initialPercent *
           Math.pow(
@@ -488,8 +493,6 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                     (hotspotsInputOrActual(numberOfActiveHotspots) *
                       (dcParticipationPercent / 100));
 
-                  console.log(dataRewards);
-
                   hotspotEarnings += challengerRewards;
                   hotspotEarnings += challengeeRewards;
                   hotspotEarnings += witnessRewards;
@@ -787,12 +790,15 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
                 <div className="bg-hpblue-700 px-4 lg:px-8 py-8">
                   <p className="text-xl pb-4 font-display text-gray-300">
-                    Calculator assumptions:
+                    Calculator assumptions
                   </p>
 
                   <div className="pb-2">
                     <p className="text-md font-display text-gray-500">
-                      Current HNT rewards distribution:
+                      {!isNaN(yearForCalculator) &&
+                      yearForCalculator > yearForCalculatorInitialValue
+                        ? `HNT rewards distribution in ${yearForCalculator}`
+                        : `Current HNT rewards distribution`}
                     </p>
                   </div>
 
@@ -868,7 +874,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
 
                   <div className="pb-2">
                     <p className="text-md font-display text-gray-500">
-                      Other data that influences calculations:
+                      Other data that influences calculations
                     </p>
                   </div>
 

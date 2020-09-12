@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 
 import Link from "next/link";
 
+import { FeedbackForm } from "feedback-fish";
+
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 
@@ -20,8 +22,7 @@ const NavBarLink = styled.a`
   font-weight: ${(props) => (props.cta ? "bold" : "normal")};
   background-color: ${(props) => (props.cta ? hpGreen : "transparent")};
   color: ${(props) => (props.cta ? "black" : "white")};
-  padding: 10px 16px;
-  height: 40px;
+  /* height: 40px; */
   border-radius: 10px;
 `;
 
@@ -30,6 +31,28 @@ const NavBarWrapperDiv = styled.nav`
   z-index: 10;
   backdrop-filter: saturate(380%) blur(20px);
 `;
+
+const SubmitFeedbackButton = (props) => (
+  <button
+    className="focus:outline-none focus:border-none px-2 py-2  mr-3"
+    {...props}
+  >
+    <svg
+      className="stroke-current w-5 text-gray-500"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+      />
+    </svg>
+  </button>
+);
 
 const NavBar = () => {
   return (
@@ -43,22 +66,22 @@ const NavBar = () => {
               </a>
             </Link>
 
-            <div>
+            <div className="flex flex-row items-center justify-end">
+              <FeedbackForm
+                projectId="026947ff10733f"
+                triggerComponent={SubmitFeedbackButton}
+                // Optional: specify the submitter's id or email. If not specified, will be treated as anonymous.
+                // userId={currentUser.email}
+              />
               <Link href="/earnings-calculator">
-                <NavBarLink
-                  className="focus:outline-none focus:border-none font-display font-lg pr-3"
-                  href="earnings-calculator"
-                >
+                <a className="focus:outline-none focus:border-none font-display text-gray-200 text-xs px-2 py-2 mr-3">
                   Calculator
-                </NavBarLink>
+                </a>
               </Link>
               <Link href="/about">
-                <NavBarLink
-                  className="focus:outline-none focus:border-none font-display font-lg pr-0"
-                  href="about"
-                >
+                <a className="focus:outline-none focus:border-none font-display text-gray-200 text-xs px-2 py-2">
                   About
-                </NavBarLink>
+                </a>
               </Link>
 
               {/* <NavBarLink
