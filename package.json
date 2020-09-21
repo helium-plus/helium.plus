@@ -8,12 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.28",
+    "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "emotion": "^10.0.27",
     "emotion-server": "^10.0.27",
-    "feedback-fish": "^0.2.0",
-    "next": "9.4.4",
+    "feedback-fish": "^0.2.1",
+    "next": "9.5.3",
     "react": "16.13.1",
     "react-currency-format": "^1.0.0",
     "react-dom": "16.13.1",
@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "postcss-preset-env": "^6.7.0",
-    "tailwindcss": "^1.4.6"
+    "tailwindcss": "^1.8.10"
   }
 }
