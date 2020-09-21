@@ -135,6 +135,7 @@ export async function getStaticProps() {
   const stats = await statsRes.json();
 
   return {
+    revalidate: 60,
     props: { chainVars, stats },
   };
 }
