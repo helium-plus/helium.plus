@@ -561,16 +561,14 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
                                 </>
                               ) : (
                                 <>
-                                  {
-                                    (formatNumber(
-                                      calculateProjectedPercent(
-                                        challengeePercent,
-                                        challengeePercentAnnualChange
-                                      ),
-                                      "%"
+                                  {formatNumber(
+                                    calculateProjectedPercent(
+                                      challengeePercent,
+                                      challengeePercentAnnualChange
                                     ),
-                                    2)
-                                  }{" "}
+                                    "%",
+                                    2
+                                  )}{" "}
                                   of the{" "}
                                   {formatNumber(monthlyRewardsInHnt, "HNT", 0)}{" "}
                                   minted every month, divided between{" "}
