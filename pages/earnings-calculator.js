@@ -375,7 +375,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
         description={
           "A calculator to help give you a rough estimate of how much HNT a hotspot might be able to earn based on its situation and the current state of the Helium network and HNT reward distribution."
         }
-        ogImageUrl={"https://helium.plus/images/og/ec.png"}
+        ogImageUrl={"https://helium.plus/images/og/e-c.png"}
         url="https://helium.plus/earnings-calculator"
       />
 
