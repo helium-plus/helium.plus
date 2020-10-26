@@ -82,11 +82,6 @@ const EarningsCalculator = ({ priceData }) => {
           }
         `}
       >
-        <Head>
-          <title>Helium Hotspot Earnings Calculator</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
         <main
           css={css`
             max-width: 400px;
