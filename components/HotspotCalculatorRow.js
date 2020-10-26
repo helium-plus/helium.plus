@@ -32,9 +32,20 @@ const HotspotCalculatorRow = (props) => {
       </div>
 
       <div className="px-4 lg:px-8 pb-10 pt-2">
-        <p className="font-body text-gray-300 pb-5 pt-4 text-md">
+        <p className="font-body text-gray-300 pb-2 pt-4 text-md">
           How many hotspots are currently active near the location where you're
           planning on putting this hotspot?
+        </p>
+        <p className="opacity-25 font-body text-gray-300 pb-8 text-md">
+          Tip: Not sure? Check{" "}
+          <a
+            target="_blank"
+            href="https://network.helium.com/coverage"
+            className="text-hpgreen-100 focus:outline-none focus:border-none"
+          >
+            the network coverage map
+          </a>
+          .
         </p>
 
         <div className="flex flex-col lg:flex-row justify-start align-start">

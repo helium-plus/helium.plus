@@ -37,10 +37,10 @@ export default class MyDocument extends Document {
           <meta name="twitter:site" content="@helium_plus" />
           <meta name="twitter:creator" content="@dcwj" />
           <meta property="og:url" content="https://helium.plus" />
-          <meta property="og:title" content="Helium+" />
+          <meta property="og:title" content="Helium Plus" />
           <meta
             property="og:description"
-            content="Helium is growing rapidly. Helium+ can help you make better sense of how it works, and find your path toward helping it grow even faster."
+            content="Helium Plus is a collection of tools to help you get the most out of the Helium network"
           />
           <meta
             property="og:image"

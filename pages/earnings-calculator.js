@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import NavBar from "../components/core/NavBar";
-import Head from "next/head";
+import MetaTags from "../components/core/MetaTags";
 import Link from "next/link";
 
 import { formatNumber } from "../lib/NumberFormatting";
@@ -370,10 +370,14 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
   return (
     <>
       <NavBar />
-      <Head>
-        <title>Helium Hotspot Earnings Calculator</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags
+        title={"Helium Hotspot Earnings Calculator — Helium Plus"}
+        description={
+          "A calculator to help give you a rough estimate of how much HNT a hotspot might be able to earn based on its situation and the current state of the Helium network and HNT reward distribution."
+        }
+        ogImageUrl={"https://helium.plus/images/og/ec.png"}
+        url="https://helium.plus/earnings-calculator"
+      />
 
       <main className="flex items-center justify-center flex-col h-full pt-4 lg:pt-20">
         <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-row w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-64">

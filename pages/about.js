@@ -1,12 +1,10 @@
-import Head from "next/head";
+import MetaTags from "../components/core/MetaTags";
 import NavBar from "../components/core/NavBar";
 
 const About = () => {
   return (
     <>
-      <Head>
-        <title>About Helium+</title>
-      </Head>
+      <MetaTags title={"Helium Plus — About"} />
       <NavBar />
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
         <section className="p-4 flex items-start lg:items-start justify-end flex-col lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">

@@ -1,15 +1,18 @@
-import Head from "next/head";
 import NavBar from "../components/core/NavBar";
-
+import MetaTags from "../components/core/MetaTags";
 import Card from "../components/core/Card";
 
 const Home = () => {
   return (
     <>
       <NavBar />
-      <Head>
-        <title>Helium+</title>
-      </Head>
+      <MetaTags
+        description={
+          "Helium Plus is a collection of tools to help you get the most out of the Helium network"
+        }
+        ogImageUrl={"https://helium.plus/images/og.png"}
+        url={"https://helium.plus"}
+      />
 
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
         <section className="p-4 flex items-start lg:items-start justify-end flex-col lg:flex-row-reverse w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">
@@ -21,9 +24,8 @@ const Home = () => {
               A Helium toolkit for power users
             </h1>
             <p className="max-w-md text-lg font-body pt-4 text-gray-500 text-left">
-              Helium is growing rapidly. Helium+ can help you make better sense
-              of how it works, and find your path toward helping it grow even
-              faster.
+              Helium is growing rapidly. Helium Plus is a collection of tools to
+              help you get the most out of it.
             </p>
           </div>
         </section>

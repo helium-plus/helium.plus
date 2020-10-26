@@ -1,5 +1,5 @@
 import NavBar from "../components/core/NavBar";
-import Head from "next/head";
+import MetaTags from "../components/core/MetaTags";
 
 const ChainVars = ({ chainVars }) => {
   const populateDescription = (key) => {
@@ -40,10 +40,14 @@ const ChainVars = ({ chainVars }) => {
   return (
     <>
       <NavBar />
-      <Head>
-        <title>Helium Chain Variables</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags
+        title={"Helium Chain Variables — Helium Plus"}
+        description={
+          "All the chain variables and their current values as returned by the Helium API"
+        }
+        ogImageUrl={"https://helium.plus/images/og/cv.png"}
+        url="https://helium.plus/chain-vars"
+      />
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
         <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-row w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-20">
           <div className="max-w-xl w-full flex items-start justify-start flex-col">
