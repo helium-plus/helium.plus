@@ -1,6 +1,5 @@
-import Head from "next/head";
-
 import NavBar from "../components/core/NavBar";
+import MetaTags from "../components/core/MetaTags";
 import { formatNumber } from "../lib/NumberFormatting";
 
 /** @jsx jsx */
@@ -15,10 +14,7 @@ const HNTCurrentPrice = ({ priceData }) => {
 
   return (
     <>
-      <Head>
-        <title>Helium Hotspot Earnings Calculator</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags title={"HNT Current Price — Helium Plus"} />
       <NavBar />
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
         <section className="p-4 flex items-start lg:items-start justify-start flex-col lg:flex-col w-full max-w-xl lg:max-w-4xl pb-12 lg:pb-40">

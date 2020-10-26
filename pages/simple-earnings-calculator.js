@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-import Head from "next/head";
-
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 
 import CurrencyFormat from "react-currency-format";
 import NavBar from "../components/core/NavBar";
+import MetaTags from "../components/core/MetaTags";
 
 const hpGreen = `#42DE9F`;
 const hpBlue = `#42D1E4`;
@@ -71,6 +70,7 @@ const EarningsCalculator = ({ priceData }) => {
   return (
     <>
       <NavBar />
+      <MetaTags title={"Simple Helium Earnings Calculator — Helium Plus"} />
       <div
         className="flex align-center justify-center"
         css={css`

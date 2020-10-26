@@ -45,7 +45,7 @@ const ChainVars = ({ chainVars }) => {
         description={
           "All the chain variables and their current values as returned by the Helium API"
         }
-        ogImageUrl={"https://helium.plus/images/og/cv2.png"}
+        ogImageUrl={"https://helium.plus/images/og/cv3.png"}
         url="https://helium.plus/chain-vars"
       />
       <main className="flex items-center justify-center flex-col pt-4 lg:pt-20">
