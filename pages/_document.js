@@ -29,7 +29,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Oxygen:wght@200;400;600;800&family=Sora:wght@200;400;600;800&display=swap"
             rel="stylesheet"
           />
-          <meta
+          {/* <meta
             property="og:image"
             content="https://helium.plus/images/og.png"
           />
@@ -45,7 +45,7 @@ export default class MyDocument extends Document {
           <meta
             property="og:image"
             content="https://helium.plus/images/og.png"
-          />
+          /> */}
 
           <script
             async
