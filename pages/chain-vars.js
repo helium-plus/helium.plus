@@ -44,6 +44,8 @@ const ChainVars = ({ chainVars }) => {
     return chainVarsArray;
   };
 
+  let resultCount = 0;
+
   return (
     <>
       <NavBar />
@@ -88,9 +90,9 @@ const ChainVars = ({ chainVars }) => {
                     className="h-4 w-4 text-gray-500"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
@@ -103,9 +105,10 @@ const ChainVars = ({ chainVars }) => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-10z lg:grid-cols-4 lg:p-1 lg:bg-gray-300 lg:rounded-lg">
+            <div className="grid grid-cols-2 lg:grid-cols-4 lg:p-1 lg:bg-gray-300 lg:rounded-lg">
               {Object.keys(chainVars.data).map((key, index) => {
                 if (filterText === "" || key.includes(filterText)) {
+                  resultCount++;
                   return (
                     <>
                       <div
@@ -124,7 +127,7 @@ const ChainVars = ({ chainVars }) => {
                         </p>
                       </div>
                       <div className="mb-10 lg:mb-0 col-span-4 lg:col-span-2 flex flex-row justify-between bg-hpblue-900 border border-gray-900 px-4 py-2">
-                        <p
+                        <span
                           id={key}
                           className={`pr-4 pt-2 text-hpblue-100 font-body font-md break-normal w-full`}
                         >
@@ -133,7 +136,10 @@ const ChainVars = ({ chainVars }) => {
                               {chainVars.data[key].map(
                                 (dataArrayItem, index) => {
                                   return (
-                                    <div className="py-2 flex flex-row">
+                                    <div
+                                      key={`${dataArrayItem}-${index}`}
+                                      className="py-2 flex flex-row"
+                                    >
                                       <span className="text-gray-700 pr-2">
                                         {index}
                                       </span>
@@ -153,9 +159,14 @@ const ChainVars = ({ chainVars }) => {
                               )}
                             </div>
                           ) : (
-                            chainVars.data[key]
+                            <p
+                              id={key}
+                              className={`pr-4 pt-2 text-hpblue-100 font-body font-md break-normal w-full`}
+                            >
+                              {chainVars.data[key]}
+                            </p>
                           )}
-                        </p>
+                        </span>
                         <div className="p-1">
                           <button
                             className="px-2 py-0 bg-gray-800 hover:bg-gray-700 h-10 rounded-md font-xs text-gray-200"
@@ -180,10 +191,17 @@ const ChainVars = ({ chainVars }) => {
                       </div>
                     </>
                   );
-                } else {
-                  return <></>;
                 }
               })}
+            </div>
+            <div>
+              {resultCount === 0 && (
+                <div className="bg-gray-300 w-full pb-2">
+                  <p className="text-gray-500 text-sm text-center">
+                    No results
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </section>
