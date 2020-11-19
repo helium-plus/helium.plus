@@ -389,7 +389,7 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
               This tool can be used to give a rough estimate of how much HNT
               your hotspot might earn, based on its situation and the current
               state of the Helium network and the current HNT reward
-              distrubtion.
+              distribution.
             </p>
             <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
               A much simpler version of this tool can be found{" "}
