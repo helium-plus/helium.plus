@@ -100,6 +100,7 @@ const ChainVars = ({ chainVars }) => {
                 <input
                   className="p-2 w-full"
                   value={filterText}
+                  autoFocus
                   onChange={handleFilterTextChange}
                   placeholder="Filter variables"
                 />
