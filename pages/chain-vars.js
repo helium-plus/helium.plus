@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/core/NavBar";
 import MetaTags from "../components/core/MetaTags";
 
 const ChainVars = ({ chainVars }) => {
   const [filterText, setFilterText] = useState("");
+  const [sortSelection, setSortSelection] = useState(0);
+
+  useEffect(() => {
+    sortVars(0);
+  }, []);
 
   const handleFilterTextChange = (event) => {
     setFilterText(event.target.value);
@@ -37,7 +42,17 @@ const ChainVars = ({ chainVars }) => {
     document.body.removeChild(el);
   };
 
-  const sortVars = (varsObject) => {
+  const copyLink = (key) => {
+    const el = document.createElement("textarea");
+    el.value = `https://hp.hn/cv/#${key}`;
+    document.body.appendChild(el);
+    el.select();
+    el.setSelectionRange(0, 99999); /*For mobile devices*/
+    document.execCommand("copy");
+    document.body.removeChild(el);
+  };
+
+  const sortVars = (sortSelection) => {
     // TODO: convert object into an array so it can more easily be manipulated on the client side (give user sorting options, etc.)
     let chainVarsArray = [];
     Object.keys(chainVars.data).map((key, index) => {});
@@ -106,6 +121,7 @@ const ChainVars = ({ chainVars }) => {
                 />
               </div>
             </div>
+            <div className="flex bg-gray-100  h-10 w-full"></div>
             <div className="grid grid-cols-2 lg:grid-cols-4 lg:p-1 lg:bg-gray-300 lg:rounded-lg">
               {Object.keys(chainVars.data).map((key, index) => {
                 if (filterText === "" || key.includes(filterText)) {
@@ -115,9 +131,30 @@ const ChainVars = ({ chainVars }) => {
                       <div
                         className={`${
                           index % 2 === 0 ? "lg:bg-gray-100" : ""
-                        } col-span-4 lg:col-span-2 bg-white border px-4 py-2 text-hpgreen-100 font-display font-md break-normal`}
+                        } col-span-4 lg:col-span-2 bg-white border px-4 py-2 text-hpgreen-100 font-display font-md break-normal relative`}
                       >
-                        <p>{key}</p>
+                        <div className="flex flex-row items-center justify-start">
+                          <p className="pr-2">{key}</p>
+                          <button
+                            className="focus:outline-none"
+                            onClick={() => copyLink(key)}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              className="h-4 w-auto"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                              />
+                            </svg>
+                          </button>
+                        </div>
 
                         <p
                           className={`${
@@ -126,10 +163,14 @@ const ChainVars = ({ chainVars }) => {
                         >
                           {populateDescription(key)}
                         </p>
+                        <a
+                          id={key}
+                          className="absolute invisible"
+                          style={{ top: "-50px" }}
+                        ></a>
                       </div>
                       <div className="mb-10 lg:mb-0 col-span-4 lg:col-span-2 flex flex-row justify-between bg-hpblue-900 border border-gray-900 px-4 py-2">
                         <span
-                          id={key}
                           className={`pr-4 pt-2 text-hpblue-100 font-body font-md break-normal w-full`}
                         >
                           {Array.isArray(chainVars.data[key]) ? (
