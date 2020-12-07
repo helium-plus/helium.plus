@@ -1,10 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import NavBar from "../components/core/NavBar";
 import MetaTags from "../components/core/MetaTags";
 
 const ChainVars = ({ chainVars }) => {
   const [filterText, setFilterText] = useState("");
+  const [chainVarsArray, setChainVarsArray] = useState([]);
   const [sortSelection, setSortSelection] = useState(0);
+
+  const input = useRef();
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
+
+  const handleKeydown = (event) => {
+    // Disable the following keyboard shortcuts when the user is typing
+    if (document.activeElement.tagName === "INPUT") return;
+    if (document.activeElement.tagName === "TEXTAREA") return;
+
+    if (event.key === "/") {
+      event.preventDefault();
+      focusSearchBar();
+    }
+  };
+
+  const focusSearchBar = () => {
+    input.current.focus();
+  };
 
   useEffect(() => {
     sortVars(0);
@@ -55,8 +81,21 @@ const ChainVars = ({ chainVars }) => {
   const sortVars = (sortSelection) => {
     // TODO: convert object into an array so it can more easily be manipulated on the client side (give user sorting options, etc.)
     let chainVarsArray = [];
-    Object.keys(chainVars.data).map((key, index) => {});
-    return chainVarsArray;
+    Object.keys(chainVars.data).map((key, index) => {
+      console.log(`index: ${index}`);
+      console.log(`key: ${key}`);
+      console.log(`chainVars.data[key]: ${chainVars.data[key]}`);
+      let chainVar = {
+        key: key,
+        value: chainVars.data[key],
+      };
+      chainVarsArray.push(chainVar);
+    });
+
+    chainVarsArray.sort(function (a, b) {
+      return a.key.localeCompare(b.key);
+    });
+    setChainVarsArray(chainVarsArray);
   };
 
   let resultCount = 0;
@@ -89,7 +128,7 @@ const ChainVars = ({ chainVars }) => {
             <h2 className="font-display text-black text-3xl font-bold pt-6 pb-6">
               Chain Variables
             </h2>
-            <div className="pb-10">
+            <div className="pb-5">
               <div className="lg:w-1/2 w-full relative">
                 <button
                   className="absolute right-0 my-2 mx-2 py-1 px-1"
@@ -112,19 +151,31 @@ const ChainVars = ({ chainVars }) => {
                     />
                   </svg>
                 </button>
+                {/* <img
+                  src="/images/keyboard-icon.svg"
+                  className="absolute right-0 mr-8 h-10 py-2 px-2"
+                /> */}
                 <input
-                  className="p-2 w-full"
+                  className="p-2 w-full placeholder-opacity-50"
                   value={filterText}
                   autoFocus
+                  ref={input}
                   onChange={handleFilterTextChange}
-                  placeholder="Filter variables"
+                  placeholder={`Filter variables (press "/" to focus)`}
                 />
               </div>
             </div>
-            <div className="flex bg-gray-100  h-10 w-full"></div>
+            {/* <div className="flex bg-gray-100 w-full mb-5 px-2 py-2">
+              <div className="bg-gray-200 rounded-md w-1/3 p-5 mx-2">
+                <p>Alphabetical</p>
+              </div>
+              <div className="bg-gray-200 rounded-md w-1/3 p-5 mx-2"></div>
+              <div className="bg-gray-200 rounded-md w-1/3 p-5 mx-2">
+              </div>
+            </div> */}
             <div className="grid grid-cols-2 lg:grid-cols-4 lg:p-1 lg:bg-gray-300 lg:rounded-lg">
-              {Object.keys(chainVars.data).map((key, index) => {
-                if (filterText === "" || key.includes(filterText)) {
+              {chainVarsArray.map((chainVar, index) => {
+                if (filterText === "" || chainVar.key.includes(filterText)) {
                   resultCount++;
                   return (
                     <>
@@ -134,10 +185,12 @@ const ChainVars = ({ chainVars }) => {
                         } col-span-4 lg:col-span-2 bg-white border px-4 py-2 text-hpgreen-100 font-display font-md break-normal relative`}
                       >
                         <div className="flex flex-row items-center justify-start">
-                          <p className="pr-2">{key}</p>
+                          <p className="pr-2">{chainVar.key}</p>
                           <button
                             className="focus:outline-none"
-                            onClick={() => copyLink(key)}
+                            onClick={() => {
+                              copyLink(chainVar.key);
+                            }}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -161,10 +214,10 @@ const ChainVars = ({ chainVars }) => {
                             index % 2 === 0 ? "lg:bg-gray-100" : ""
                           } text-gray-500 font-body font-sm pb-12z pr-4 break-normal`}
                         >
-                          {populateDescription(key)}
+                          {populateDescription(chainVar.key)}
                         </p>
                         <a
-                          id={key}
+                          id={chainVar.key}
                           className="absolute invisible"
                           style={{ top: "-50px" }}
                         ></a>
@@ -173,10 +226,10 @@ const ChainVars = ({ chainVars }) => {
                         <span
                           className={`pr-4 pt-2 text-hpblue-100 font-body font-md break-normal w-full`}
                         >
-                          {Array.isArray(chainVars.data[key]) ? (
+                          {Array.isArray(chainVar.value) ? (
                             <div className="break-all">
-                              {chainVars.data[key].map(
-                                (dataArrayItem, index) => {
+                              {chainVar.value.map(
+                                (dataArrayItem, index, { length }) => {
                                   return (
                                     <div
                                       key={`${dataArrayItem}-${index}`}
@@ -187,8 +240,7 @@ const ChainVars = ({ chainVars }) => {
                                       </span>
                                       <p
                                         className={`pb-3 ${
-                                          index + 1 !==
-                                          chainVars.data[key].length
+                                          index + 1 !== length
                                             ? "border-b border-gray-800"
                                             : ""
                                         }`}
@@ -202,17 +254,17 @@ const ChainVars = ({ chainVars }) => {
                             </div>
                           ) : (
                             <p
-                              id={key}
+                              id={chainVar.key}
                               className={`pr-4 pt-2 text-hpblue-100 font-body font-md break-normal w-full`}
                             >
-                              {chainVars.data[key]}
+                              {chainVar.value}
                             </p>
                           )}
                         </span>
                         <div className="p-1">
                           <button
                             className="px-2 py-0 bg-gray-800 hover:bg-gray-700 h-10 rounded-md font-xs text-gray-200"
-                            onClick={() => copyText(key)}
+                            onClick={() => copyText(chainVar.key)}
                           >
                             <svg
                               className="w-5 stroke-text text-gray-500"
