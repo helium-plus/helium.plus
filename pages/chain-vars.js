@@ -7,29 +7,29 @@ const ChainVars = ({ chainVars }) => {
   // const [chainVars, setchainVars] = useState([]);
   // const [sortSelection, setSortSelection] = useState(0);
 
-  // const input = useRef();
+  const input = useRef();
 
-  // useEffect(() => {
-  //   document.addEventListener("keydown", handleKeydown);
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeydown);
 
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeydown);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
 
-  // const handleKeydown = (event) => {
-  //   // Disable the following keyboard shortcuts when the user is typing
-  //   if (document.activeElement.tagName === "INPUT") return;
-  //   if (document.activeElement.tagName === "TEXTAREA") return;
+  const handleKeydown = (event) => {
+    // Disable the following keyboard shortcuts when the user is typing
+    if (document.activeElement.tagName === "INPUT") return;
+    if (document.activeElement.tagName === "TEXTAREA") return;
 
-  //   if (event.key === "/") {
-  //     event.preventDefault();
-  //     focusSearchBar();
-  //   }
-  // };
+    if (event.key === "/") {
+      event.preventDefault();
+      focusSearchBar();
+    }
+  };
 
   const focusSearchBar = () => {
-    // input.current.focus();
+    input.current.focus();
   };
 
   // useEffect(() => {
@@ -139,7 +139,7 @@ const ChainVars = ({ chainVars }) => {
                   className="p-2 w-full placeholder-opacity-50"
                   value={filterText}
                   autoFocus
-                  // ref={input}
+                  ref={input}
                   onChange={handleFilterTextChange}
                   // placeholder={`Filter variables (press "/" to focus)`}
                   placeholder={`Filter variables`}
