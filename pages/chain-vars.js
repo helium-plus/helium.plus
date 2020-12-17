@@ -4,37 +4,37 @@ import MetaTags from "../components/core/MetaTags";
 
 const ChainVars = ({ chainVars }) => {
   const [filterText, setFilterText] = useState("");
-  const [chainVarsArray, setChainVarsArray] = useState([]);
-  const [sortSelection, setSortSelection] = useState(0);
+  // const [chainVars, setchainVars] = useState([]);
+  // const [sortSelection, setSortSelection] = useState(0);
 
-  const input = useRef();
+  // const input = useRef();
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeydown);
+  // useEffect(() => {
+  //   document.addEventListener("keydown", handleKeydown);
 
-    return () => {
-      document.removeEventListener("keydown", handleKeydown);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeydown);
+  //   };
+  // }, []);
 
-  const handleKeydown = (event) => {
-    // Disable the following keyboard shortcuts when the user is typing
-    if (document.activeElement.tagName === "INPUT") return;
-    if (document.activeElement.tagName === "TEXTAREA") return;
+  // const handleKeydown = (event) => {
+  //   // Disable the following keyboard shortcuts when the user is typing
+  //   if (document.activeElement.tagName === "INPUT") return;
+  //   if (document.activeElement.tagName === "TEXTAREA") return;
 
-    if (event.key === "/") {
-      event.preventDefault();
-      focusSearchBar();
-    }
-  };
+  //   if (event.key === "/") {
+  //     event.preventDefault();
+  //     focusSearchBar();
+  //   }
+  // };
 
   const focusSearchBar = () => {
-    input.current.focus();
+    // input.current.focus();
   };
 
-  useEffect(() => {
-    sortVars(0);
-  }, []);
+  // useEffect(() => {
+  //   initialConvert();
+  // }, []);
 
   const handleFilterTextChange = (event) => {
     setFilterText(event.target.value);
@@ -76,26 +76,6 @@ const ChainVars = ({ chainVars }) => {
     el.setSelectionRange(0, 99999); /*For mobile devices*/
     document.execCommand("copy");
     document.body.removeChild(el);
-  };
-
-  const sortVars = (sortSelection) => {
-    // TODO: convert object into an array so it can more easily be manipulated on the client side (give user sorting options, etc.)
-    let chainVarsArray = [];
-    Object.keys(chainVars.data).map((key, index) => {
-      console.log(`index: ${index}`);
-      console.log(`key: ${key}`);
-      console.log(`chainVars.data[key]: ${chainVars.data[key]}`);
-      let chainVar = {
-        key: key,
-        value: chainVars.data[key],
-      };
-      chainVarsArray.push(chainVar);
-    });
-
-    chainVarsArray.sort(function (a, b) {
-      return a.key.localeCompare(b.key);
-    });
-    setChainVarsArray(chainVarsArray);
   };
 
   let resultCount = 0;
@@ -159,10 +139,18 @@ const ChainVars = ({ chainVars }) => {
                   className="p-2 w-full placeholder-opacity-50"
                   value={filterText}
                   autoFocus
-                  ref={input}
+                  // ref={input}
                   onChange={handleFilterTextChange}
-                  placeholder={`Filter variables (press "/" to focus)`}
+                  // placeholder={`Filter variables (press "/" to focus)`}
+                  placeholder={`Filter variables`}
                 />
+                {/* <button
+                  onClick={() => {
+                    sortVars(0);
+                  }}
+                >
+                  Alphabetize
+                </button> */}
               </div>
             </div>
             {/* <div className="flex bg-gray-100 w-full mb-5 px-2 py-2">
@@ -174,7 +162,7 @@ const ChainVars = ({ chainVars }) => {
               </div>
             </div> */}
             <div className="grid grid-cols-2 lg:grid-cols-4 lg:p-1 lg:bg-gray-300 lg:rounded-lg">
-              {chainVarsArray.map((chainVar, index) => {
+              {chainVars.map((chainVar, index) => {
                 if (filterText === "" || chainVar.key.includes(filterText)) {
                   resultCount++;
                   return (
@@ -306,9 +294,22 @@ const ChainVars = ({ chainVars }) => {
 
 export async function getStaticProps() {
   const chainVarsRes = await fetch(`https://api.helium.io/v1/vars`);
-  const chainVars = await chainVarsRes.json();
+  const chainVarsObj = await chainVarsRes.json();
   const statsRes = await fetch(`https://api.helium.io/v1/stats`);
   const stats = await statsRes.json();
+
+  let chainVars = [];
+  Object.keys(chainVarsObj.data).map((key) => {
+    let chainVar = {
+      key: key,
+      value: chainVarsObj.data[key],
+    };
+    chainVars.push(chainVar);
+  });
+
+  chainVars.sort(function (a, b) {
+    return a.key.localeCompare(b.key);
+  });
 
   return {
     revalidate: 60,
