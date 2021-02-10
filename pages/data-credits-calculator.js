@@ -8,7 +8,7 @@ const DataCreditsCalculator = () => {
   const [enteredAmount, setEnteredAmount] = useState(10);
   const [equivalentAmount, setEquivalentAmount] = useState(0);
   const [calculatorEnteringCurrency, setCalculatorEnteringCurrency] = useState(
-    "dc"
+    "usd"
   );
 
   const handleSwapCurrency = () => {
