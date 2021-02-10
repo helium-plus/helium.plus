@@ -75,28 +75,26 @@ const Home = () => {
                   />
                 </svg>
               </Card>
-
               <Card
-                link="/hnt-current-price"
-                title="HNT Current Price"
-                description="The current HNT price"
+                link="/data-credits-calculator"
+                title="Helium Data Credits Calculator"
+                description="A calculator to help you convert between HNT and USD"
               >
                 <svg
                   className="stroke-current text-gray-500"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  stroke="hpblue"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
                   />
                 </svg>
               </Card>
-
               <Card
                 link="/simple-earnings-calculator"
                 title="Simple Earnings Calculator"
@@ -114,6 +112,26 @@ const Home = () => {
                     strokeLinejoin="round"
                     strokeWidth={2}
                     d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </Card>
+              <Card
+                link="/hnt-current-price"
+                title="HNT Current Price"
+                description="The current HNT price"
+              >
+                <svg
+                  className="stroke-current text-gray-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
               </Card>
