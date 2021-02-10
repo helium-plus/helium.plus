@@ -8,6 +8,20 @@
       }
     },
     {
+      "src": "/dc",
+      "status": 301,
+      "headers": {
+        "Location": "/data-credits-calculator"
+      }
+    },
+    {
+      "src": "/dcc",
+      "status": 301,
+      "headers": {
+        "Location": "/data-credits-calculator"
+      }
+    },
+    {
       "src": "/sec",
       "status": 301,
       "headers": {
