@@ -391,14 +391,38 @@ const EarningsCalculator = ({ chainVars, priceData, stats }) => {
               state of the Helium network and the current HNT reward
               distribution.
             </p>
-            <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
+            <div className="bg-yellow-300 bg-opacity-75 rounded-xl mt-10 p-5">
+              <div className="flex flex-row items-center justify-start mb-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-5 h-auto mr-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <p className="text-sm font-bold font-display">DISCLAIMER</p>
+              </div>
+              <p className="text-xl font-normal font-display">
+                This website is not affiliated with Helium Inc., and nothing on
+                this website should be construed as financial advice or used as
+                the basis of any investment or financial decisions.
+              </p>
+            </div>
+            {/* <p className="max-w-2xl text-lg font-body pt-4 text-gray-500 text-left">
               A much simpler version of this tool can be found{" "}
               <Link href="/simple-earnings-calculator">
                 <a className="text-hpgreen-100 focus:outline-none focus:border-none">
                   here.
                 </a>
               </Link>
-            </p>
+            </p> */}
           </div>
         </section>
         <section className="md:bg-gray-400 flex-auto w-full flex items-center lg:items-start justify-end flex-col pb-20 lg:pb-32">
